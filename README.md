@@ -1,18 +1,16 @@
-Markdown Gradle Plugin
+Pandoc/Markdown Gradle Plugin
 -------------------------
 
-[![Travis Build Status](http://img.shields.io/travis/aalmiray/markdown-gradle-plugin.svg)](https://travis-ci.org/aalmiray/markdown-gradle-plugin)
-[![Coverage Status](http://img.shields.io/coveralls/aalmiray/markdown-gradle-plugin.svg)](https://coveralls.io/r/aalmiray/markdown-gradle-plugin)
+[![Travis Build Status](http://img.shields.io/travis/sleroy/gradle-pandoc-plugin.svg)](https://travis-ci.org/sleroy/gradle-pandoc-plugin)
+[![Coverage Status](http://img.shields.io/coveralls/sleroy/gradle-pandoc-plugin.svg)](https://coveralls.io/r/sleroy/gradle-pandoc-plugin)
 [![Semantic Versioning](http://img.shields.io/:semver-0.1.1-blue.svg)](http://semver.org)
-[![Bintray](http://img.shields.io/badge/download-latest-bb00bb.svg)](https://bintray.com/aalmiray/kordamp/markdown-gradle-plugin)
+[![Bintray](http://img.shields.io/badge/download-latest-bb00bb.svg)](https://bintray.com/sleroy/kordamp/gradle-pandoc-plugin)
 
-This plugin provides a facility for converting markdown into HTML, as well as
-converting HTML back into markdown. It is based on the [grails-markdown][]
-plugin by Ted Naleid.
+This plugin provides a facility for converting markdown into HTML, PDF, EBook. It is based on the [thymeleaf project][]
+script by Emanuel Rabina.
 
 See [Daring Fireball][] for syntax basics.
 
-This plugin makes use of the [Pegdown][] and [Remark][] libraries.
 
 Installation
 ------------
@@ -22,10 +20,10 @@ Use the following snippet
     buildscript {
         repositories {
             jcenter()
-            maven { url 'http://dl.bintray.com/content/aalmiray/kordamp' }
+            maven { url 'http://dl.bintray.com/content/sleroy/kordamp' }
         }
         dependencies {
-            classpath 'org.kordamp:markdown-gradle-plugin:0.1.1'
+            classpath 'org.kordamp:gradle-pandoc-plugin:0.1.1'
         }
     }
     apply plugin: 'org.kordamp.gradle.markdown'
