@@ -1,0 +1,88 @@
+/*
+ * Copyright 2013-2014 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'net.saliman:gradle-cobertura-plugin:2.2.2'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.2.4'
+        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.7.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.3'
+    }
+}
+
+apply plugin: 'groovy'
+apply plugin: 'idea'
+apply plugin: 'codenarc'
+apply plugin: 'cobertura'
+apply plugin: 'coveralls'
+apply plugin: 'build-dashboard'
+apply plugin: 'license'
+apply from: 'gradle/publish.gradle'
+
+repositories {
+    jcenter()
+    maven { url 'http://dl.bintray.com/content/aalmiray/kordamp' }
+}
+
+dependencies {
+    compile gradleApi()
+    compile 'com.overzealous:remark:0.9.3',
+            'org.jsoup:jsoup:1.7.2',
+            'org.apache.commons:commons-lang3:3.1',
+            'org.pegdown:pegdown:1.2.1'
+    testCompile('org.spockframework:spock-core:0.6-groovy-1.8') {
+        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+        exclude group: 'org.hamcrest', module: 'hamcrest-core'
+    }
+    testCompile 'cglib:cglib-nodep:2.2.2'
+}
+
+license {
+    header = rootProject.file('config/HEADER')
+    strictCheck = true
+    ignoreFailures = false
+    mapping {
+        java ='SLASHSTAR_STYLE'
+        groovy ='SLASHSTAR_STYLE'
+    }
+    ext.year = '2012-2014'
+}
+
+cobertura {
+    coverageFormats = ['html', 'xml']
+    coverageSourceDirs = sourceSets.main.groovy.srcDirs
+}
+
+codenarc {
+    configFile = file('config/codenarc/codenarc.groovy')
+    // run codenarc on production sources only
+    sourceSets = [project.sourceSets.main]
+}
+
+task sourceJar(type: Jar) {
+    group 'Build'
+    description 'An archive of the source code'
+    classifier 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    sourceJar
+}
