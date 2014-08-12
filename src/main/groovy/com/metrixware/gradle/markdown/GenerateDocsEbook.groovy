@@ -19,8 +19,6 @@ import static com.metrixware.gradle.markdown.Utils.*
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 /**
  * Generates the documentation in ebook format
@@ -28,15 +26,12 @@ import org.slf4j.LoggerFactory
  *
  */
 class GenerateDocsEbook extends DefaultTask{
-	private static final Logger LOGGER = LoggerFactory.getLogger('markdown-ebook	')
 	
 	
 	@TaskAction
 	void runTask() {
-		def docTypeNames = getTemplates(project)
 		def docTypes = indexDocsPerType(project)
 
-		def outputDir = project.file(project.documentation.folder_output)
 		def outputDirDoc = project.file(project.documentation.folder_outputdoc)
 		def tmpFolder = project.file(project.documentation.folder_tmp)
 		def tmpTemplatesFolder = project.file(project.documentation.folder_tmp + '/templates')
@@ -47,23 +42,23 @@ class GenerateDocsEbook extends DefaultTask{
 			def docType     = docTypes.get(docFileBase)
 
 			if (project.documentation.conversions[docType].contains('ebook')) {
-				println "Generating E-books for ${docFileBase}..."
+				println 'Generating E-books for ${docFileBase}...'
 				project.exec{
 					commandLine=[
-						"pandoc",
-						"--write=epub",
-						"--template=" + project.file("${tmpTemplatesFolder}/${docType}.epub"),
-						"--toc",
-						"--toc-depth=4",
-						"--section-divs",
-						"--smart",
-						"--output=" + project.file("${outputDirDoc}/${docFileBase}.epub"),
+						'pandoc',
+						'--write=epub',
+						'--template=' + project.file("${tmpTemplatesFolder}/${docType}.epub"),
+						'--toc',
+						'--toc-depth=4',
+						'--section-divs',
+						'--smart',
+						'--output=' + project.file("${outputDirDoc}/${docFileBase}.epub"),
 						"${docFile}"					
 					]
 					workingDir = tmpFolder
 					}
 				project.exec{commandLine=[
-					"ebook-convert",
+					'ebook-convert',
 					project.file("${outputDirDoc}/${docFileBase}.epub"),
 					project.file("${outputDirDoc}/${docFileBase}.mobi")
 				]}

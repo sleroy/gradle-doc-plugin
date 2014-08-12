@@ -27,11 +27,9 @@ import org.slf4j.LoggerFactory
  */
 class MarkdownToolCheckingTask extends DefaultTask {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger("markdown-tools")
+	private static final Logger LOGGER = LoggerFactory.getLogger('markdown-tools')
 
 
-	MarkdownToolCheckingTask() {
-	}
 
 	@TaskAction
 	void runTask() {

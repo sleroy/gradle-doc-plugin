@@ -76,9 +76,9 @@ class MarkdownPlugin implements Plugin<Project> {
 			'generateDocsPDF'
 		],
 		group: DOCUMENTATION,
-		description: "Generate HTML, E-book and PDF documents from markdown docs")
+		description: 'Generate HTML, E-book and PDF documents from markdown docs')
 
-		project.extensions.create("documentation", DocumentationConfiguration)
+		project.extensions.create('documentation', DocumentationConfiguration)
 	}
 }
 

@@ -34,10 +34,8 @@ class GenerateDocsHTML extends DefaultTask {
 	
 	@TaskAction
 	void runTask() {
-		def docTypeNames = getTemplates(project)
 		def docTypes = indexDocsPerType(project)
 
-		def outputDir = project.file(project.documentation.folder_output)
 		def outputDirDoc = project.file(project.documentation.folder_outputdoc)
 		def tmpFolder = project.file(project.documentation.folder_tmp)
 		def tmpTemplatesFolder = project.file(project.documentation.folder_tmp + '/templates')
@@ -46,19 +44,19 @@ class GenerateDocsHTML extends DefaultTask {
 			def docType     = docTypes.get(docFileBase)
 
 			if (project.documentation.conversions[docType].contains('html')) {
-				println "Generating HTML doc for ${docFileBase}..."
-				println project.file("${outputDirDoc}/${docFileBase}.html")
+				println 'Generating HTML doc for ${docFileBase}...'
+				println project.file('${outputDirDoc}/${docFileBase}.html')
 				project.exec({
 					commandLine = [
-						"pandoc",
-						"--write=html5",
-						"--template=" + project.file("${tmpTemplatesFolder}/${docType}.html"),
-						"--toc",
-						"--toc-depth=4",
-						"--section-divs",
-						"--no-highlight",
-						"--smart",
-						"--output=" + project.file("${outputDirDoc}/${docFileBase}.html"),
+						'pandoc',
+						'--write=html5',
+						'--template=' + project.file("${tmpTemplatesFolder}/${docType}.html"),
+						'--toc',
+						'--toc-depth=4',
+						'--section-divs',
+						'--no-highlight',
+						'--smart',
+						'--output=' + project.file("${outputDirDoc}/${docFileBase}.html"),
 						"${docFile}"
 					]
 					workingDir = tmpFolder
@@ -66,7 +64,7 @@ class GenerateDocsHTML extends DefaultTask {
 				)
 			}
 		}
-		LOGGER.info("Moving generated files into distribution site")
+		LOGGER.info('Moving generated files into distribution site')
 		// Copy over resources needed for the HTML docs
 		project.copy {
 			from(tmpFolder) {

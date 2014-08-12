@@ -16,39 +16,32 @@
 package com.metrixware.gradle.markdown
 
 class Utils {
-	
+
 	/**
 	 * Get just the name of the file minus the path and extension.
 	 *
 	 * @param file
 	 */
-	def static fileBaseName(file) {
+	static fileBaseName(file) {
 
 		return file.name.replaceFirst(~/\.[^\.]+$/, '')
 	}
-	
-	def static getTemplates(project) {
+
+	static getTemplates(project) {
 		def docTypeNames    = [] as Set
 		def docFolder = project.file(project.documentation.folder_docs)
-		project.fileTree(docFolder) {
-			include '**/*.md'
-		}.each {
-			docFile ->
+		project.fileTree(docFolder) { include '**/*.md' }.each { docFile ->
 			docTypeNames.add(docFile.parentFile.name)
 		}
 		return docTypeNames
 	}
 
-	def static indexDocsPerType(project) {
+	static indexDocsPerType(project) {
 		def docTypes        = [:]
 		def docFolder = project.file(project.documentation.folder_docs)
-		project.fileTree(docFolder) {
-			include '**/*.md'
-		}.each {
-			docFile ->
+		project.fileTree(docFolder) { include '**/*.md' }.each { docFile ->
 			docTypes.put(fileBaseName(docFile), docFile.parentFile.name)
 		}
 		return docTypes
 	}
-
 }

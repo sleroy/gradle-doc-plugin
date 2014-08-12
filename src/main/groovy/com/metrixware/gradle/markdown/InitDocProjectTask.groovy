@@ -20,7 +20,7 @@ import org.gradle.api.tasks.TaskAction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-public class InitDocProjectTask extends DefaultTask {
+class InitDocProjectTask extends DefaultTask {
 	private static final Logger LOGGER = LoggerFactory.getLogger('markdown-init')
 
 	@TaskAction
@@ -29,7 +29,7 @@ public class InitDocProjectTask extends DefaultTask {
 		def scriptsFolder = project.file(project.documentation.folder_scripts)
 		def stylesFolder = project.file(project.documentation.folder_styles)
 		def templatesFolder = project.file(project.documentation.folder_templates)
-		def folder_tmp = project.file(project.documentation.folder_tmp)
+		def folderTmp = project.file(project.documentation.folder_tmp)
 
 		LOGGER.info('Creating documentation folder...')
 		if (!docFolder.exists() && !docFolder.mkdirs()) {
@@ -48,11 +48,11 @@ public class InitDocProjectTask extends DefaultTask {
 			LOGGER.error('Could not create the folder templatesFolder')
 		}
 		LOGGER.info('Creating temporary folder...')
-		if (!folder_tmp.exists() && !folder_tmp.mkdirs()) {
-			LOGGER.error('Could not create the folder $folder_tmp')
+		if (!folderTmp.exists() && !folderTmp.mkdirs()) {
+			LOGGER.error('Could not create the folder $folderTmp')
 		}
 		for (String key : project.documentation.conversions.keySet()) {
-			def tpl = project.file(templatesFolder.getPath() +'/' + key)
+			def tpl = project.file(templatesFolder.path +'/' + key)
 			if (!tpl.exists() && !tpl.mkdirs()) {
 				LOGGER.error('Could not create the folder $tpl')
 			}

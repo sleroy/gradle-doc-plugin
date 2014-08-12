@@ -21,6 +21,7 @@ ruleset {
     }
     ruleset('rulesets/imports.xml') {
         exclude 'MisorderedStaticImports'
+		exclude 'UnusedImport'
     }
     ruleset('rulesets/naming.xml') {
         exclude 'PropertyName'
@@ -44,9 +45,17 @@ ruleset {
     ruleset('rulesets/braces.xml') {
        exclude 'IfStatementBraces'
     }
-    ruleset('rulesets/size.xml')
+    ruleset('rulesets/size.xml') {
+		exclude 'AbcMetric'
+	}
     ruleset('rulesets/junit.xml')
-    ruleset('rulesets/unnecessary.xml')
-    ruleset('rulesets/dry.xml')
+    ruleset('rulesets/unnecessary.xml') {
+		exclude "UnnecessaryObjectReferences"
+		exclude "UnnecessaryReturnKeyword"
+	}
+    ruleset('rulesets/dry.xml') {
+		exclude 'DuplicateStringLiteral'
+		exclude 'DuplicateListLiteral'
+	}
     ruleset('rulesets/design.xml')
 }

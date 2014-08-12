@@ -27,18 +27,14 @@ import org.slf4j.LoggerFactory
  *
  */
 class GenerateDocsPDF extends DefaultTask {
-	private static final Logger LOGGER = LoggerFactory.getLogger('markdown-pdf')
 	
 	
 	@TaskAction
 	void runTask() {
-		def docTypeNames = getTemplates(project)
 		def docTypes = indexDocsPerType(project)
 
-		def outputDir = project.file(project.documentation.folder_output)
 		def outputDirDoc = project.file(project.documentation.folder_outputdoc)
 		def tmpFolder = project.file(project.documentation.folder_tmp)
-		def tmpTemplatesFolder = project.file(project.documentation.folder_tmp + '/templates')
 
 		def webAppDirName = outputDirDoc
 		//		// Copy over the HTML documents into a directory from which we can host them
@@ -68,22 +64,22 @@ class GenerateDocsPDF extends DefaultTask {
 				println "Generating PDF doc for ${docFileBase}..."
 				project.exec{
 					commandLine = [
-						"wkhtmltopdf",
-						"--print-media-type",
-						"--dpi",
-						"150",
-						"--margin-bottom",
-						"15",
-						"--footer-spacing",
-						"5",
-						"--footer-font-size",
-						"8",
-						"--footer-font-name",
-						"'Open Sans'",
-						"--footer-right",
-						"Page [page] of [topage]",
-						"--header-font-name",
-						"'Open Sans'",
+						'wkhtmltopdf',
+						'--print-media-type',
+						'--dpi',
+						'150',
+						'--margin-bottom',
+						'15',
+						'--footer-spacing',
+						'5',
+						'--footer-font-size',
+						'8',
+						'--footer-font-name',
+						'\'Open Sans\'',
+						'--footer-right',
+						'Page [page] of [topage]',
+						'--header-font-name',
+						'\'Open Sans\'',
 						"${buildDir}/jetty/${docFile.name}",
 						project.file("${outputDirDoc}/${docFileBase}.pdf")
 					]

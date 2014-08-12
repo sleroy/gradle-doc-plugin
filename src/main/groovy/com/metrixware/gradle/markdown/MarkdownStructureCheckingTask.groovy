@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory
  */
 class MarkdownStructureCheckingTask extends DefaultTask {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger("markdown-env")
+	private static final Logger LOGGER = LoggerFactory.getLogger('markdown-env')
 
 	@TaskAction
 	void runTask() {
@@ -49,10 +49,10 @@ class MarkdownStructureCheckingTask extends DefaultTask {
 			throw new GradleScriptException('could not generate markdown configuration, the project configuration is uncomplete', null)
 		}
 		for (String key : project.documentation.conversions.keySet()) {
-			def tpl = project.file(templatesFolder.getPath() +'/' + key);
+			def tpl = project.file(templatesFolder.path +'/' + key)
 			if (!tpl.exists()) {
-				LOGGER.error("Required template folder $tpl is missing.");
-				throw new GradleScriptException("Required template folder $tpl is missing.", null);
+				LOGGER.error('Required template folder $tpl is missing.')
+				throw new GradleScriptException("Required template folder $tpl is missing.", null)
 			}
 		}
 
@@ -65,7 +65,7 @@ class MarkdownStructureCheckingTask extends DefaultTask {
 		def present = folder.exists()
 		def res = present ? 'OK' : 'NOK'
 		LOGGER.info("Checking $folderName [$folder]\t[$res]" )
-		return present
+		present
 	}
 }
 

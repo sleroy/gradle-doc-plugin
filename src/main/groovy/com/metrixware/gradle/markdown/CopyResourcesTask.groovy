@@ -16,7 +16,7 @@
 package com.metrixware.gradle.markdown
 
 import java.text.SimpleDateFormat
-import static com.metrixware.gradle.markdown.Utils.*;
+import static com.metrixware.gradle.markdown.Utils.*
 
 import nz.net.ultraq.lesscss.LessCSSCompiler
 
@@ -26,7 +26,9 @@ import org.gradle.api.tasks.TaskAction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-public class CopyResourcesTask extends DefaultTask {
+class CopyResourcesTask extends DefaultTask {
+
+	static final LESS_EXTENSION = '**/*.less'
 	private static final Logger LOGGER = LoggerFactory.getLogger('markdown-copy')
 
 
@@ -43,22 +45,21 @@ public class CopyResourcesTask extends DefaultTask {
 
 
 		def docTypeNames = getTemplates(project)
-		def docTypes = indexDocsPerType(project)
-		
-		
-		
+
+
+
 		LOGGER.debug("Creating temporary folder in $tmpFolder")
 		tmpFolder.mkdirs()
 		LOGGER.debug("Creating temporary templates folder in $tmpTemplatesFolder")
 		tmpTemplatesFolder.mkdirs()
-		LOGGER.debug("Creating output directory")
+		LOGGER.debug('Creating output directory')
 		outputDir.mkdirs()
-		LOGGER.debug("Creating output documentation directory")
+		LOGGER.debug('Creating output documentation directory')
 		outputDirDoc.mkdirs()
-			
+
 		LOGGER.info("Document templates found : $docTypeNames")
-		
-		LOGGER.info('Copy all md resources into a same folder');
+
+		LOGGER.info('Copy all md resources into a same folder')
 		// Copy all .md files into the same directory
 		project.fileTree(docFolder) { include '**/*.md' }.each { docFile ->
 			project.copy {
@@ -66,11 +67,10 @@ public class CopyResourcesTask extends DefaultTask {
 				into tmpFolder
 			}
 		}
-	
+
 
 		LOGGER.info('Copying pictures...')
-		docTypeNames.each {
-			docTypeName ->
+		docTypeNames.each { docTypeName ->
 			def imagesDir = project.file("${docFolder}/${docTypeName}/images")
 			project.copy {
 				from imagesDir
@@ -87,11 +87,11 @@ public class CopyResourcesTask extends DefaultTask {
 		LOGGER.info('Copying CSS and compiling LESS files before copy...')
 		// Copy over stylesheets, compiling LessCSS files into CSS
 		project.copy {
-			from(scriptsFolder) { exclude '**/*.less' }
+			from(stylesFolder) { exclude LESS_EXTENSION }
 			into "${tmpFolder.path}/styles"
 		}
 		LessCSSCompiler compiler = new LessCSSCompiler()
-		project.fileTree(scriptsFolder) { include '**/*.less' }.each { lessFile ->
+		project.fileTree(scriptsFolder) { include LESS_EXTENSION}.each { lessFile ->
 			def lessFileBase = fileBaseName(lessFile)
 			compiler.compile(lessFile, project.file("${tmpFolder.path}/styles/${lessFileBase}.css"))
 		}
@@ -102,8 +102,8 @@ public class CopyResourcesTask extends DefaultTask {
 		def magicVariablesMap = new Properties()
 		properties['documentVersion']=  documentVersion
 		properties['projectVersion']=  project.version
-		properties.putAll(project.documentation.variables);
-		
+		properties.putAll(project.documentation.variables)
+
 		project.copy {
 			from(templatesFolder) {
 				filter(ReplaceTokens, tokens: magicVariablesMap)
@@ -112,6 +112,6 @@ public class CopyResourcesTask extends DefaultTask {
 		}
 
 
-	
+
 	}
 }
