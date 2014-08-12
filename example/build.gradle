@@ -9,5 +9,5 @@ buildscript {
     }
 }
 apply plugin: 'markdown'
-
+apply plugin : 'java'
 

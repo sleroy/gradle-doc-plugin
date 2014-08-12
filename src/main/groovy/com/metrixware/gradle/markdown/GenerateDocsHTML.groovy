@@ -45,7 +45,7 @@ class GenerateDocsHTML extends DefaultTask {
 
 			if (project.documentation.conversions[docType].contains('html')) {
 				println 'Generating HTML doc for ${docFileBase}...'
-				println project.file('${outputDirDoc}/${docFileBase}.html')
+				println project.file("${outputDirDoc}/${docFileBase}.html")
 				project.exec({
 					commandLine = [
 						'pandoc',

@@ -80,7 +80,7 @@ class GenerateDocsPDF extends DefaultTask {
 						'Page [page] of [topage]',
 						'--header-font-name',
 						'\'Open Sans\'',
-						"${buildDir}/jetty/${docFile.name}",
+						"${tmpFolder}/${docFile.name}",
 						project.file("${outputDirDoc}/${docFileBase}.pdf")
 					]
 					workingDir = tmpFolder
