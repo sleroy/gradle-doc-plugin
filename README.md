@@ -17,16 +17,17 @@ Installation
 
 Use the following snippet
 
-    buildscript {
-        repositories {
-            jcenter()
-            maven { url 'http://dl.bintray.com/content/sleroy/kordamp' }
-        }
-        dependencies {
-            classpath 'com.metrixware:gradle-pandoc-plugin:0.1.1'
-        }
+buildscript { 
+    repositories {
+	mavenLocal()
+        jcenter()
+        maven { url 'http://dl.bintray.com/sleroy/maven' }
     }
-    apply plugin: 'com.metrixware.gradle.markdown'
+    dependencies {
+        classpath 'com.metrixware:gradle-pandoc-plugin:0.1.0'
+    }
+}
+apply plugin: 'markdown'
 
 
 Usage
