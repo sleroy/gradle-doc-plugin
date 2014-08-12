@@ -218,27 +218,7 @@ task generateDocsEbook(
 	}
 }
 
-/**
- * Jetty configuration, including a fix for Jetty not stopping, obtained from
- * the bug report here: http://issues.gradle.org/browse/GRADLE-2263
- */
-[jettyRun, jettyStop]*.stopPort = 8081
-[jettyRun, jettyStop]*.stopKey  = 'stop'
-jettyRun.doLast {
 
-	/* 
-	 * THIS IS A WORKAROUND! THE CURRENT VERSION OF THIS TASK DOESN'T START A WATCHER IN DAEMON MODE
-	 * 
-	 * If starting the monitor fails, it may be because the jetty task was updated to fix this issue
-	 * When that happens, we shouldn't need the custom task any more
-	 * 
-	 * Copied From: AbstractJettyRunTask
-	 */
- 	if (getStopPort() != null && getStopPort() > 0 && getStopKey() != null) {
-		Monitor monitor = new Monitor(getStopPort(), getStopKey(), server.getProxiedObject());
-		monitor.start();
-	}
-}
 
 /**
  * Generate PDF versions of the Thymeleaf documentation.  Uses a Jetty server to

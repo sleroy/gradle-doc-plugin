@@ -38,15 +38,13 @@ apply from: 'gradle/publish.gradle'
 
 repositories {
     jcenter()
-    maven { url 'http://dl.bintray.com/content/aalmiray/kordamp' }
+      maven {url 'https://api.bintray.com/maven/sleroy/maven/gradle-pandoc-plugin' }
 }
 
 dependencies {
     compile gradleApi()
-    compile 'com.overzealous:remark:0.9.3',
-            'org.jsoup:jsoup:1.7.2',
-            'org.apache.commons:commons-lang3:3.1',
-            'org.pegdown:pegdown:1.2.1'
+    compile 'org.apache.commons:commons-lang3:3.1'
+	compile 'nz.net.ultraq.lesscss:lesscss-compiler:1.0.2'
     testCompile('org.spockframework:spock-core:0.6-groovy-1.8') {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
         exclude group: 'org.hamcrest', module: 'hamcrest-core'
@@ -62,7 +60,7 @@ license {
         java ='SLASHSTAR_STYLE'
         groovy ='SLASHSTAR_STYLE'
     }
-    ext.year = '2012-2014'
+    ext.year = '2014-2015'
 }
 
 cobertura {
