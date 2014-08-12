@@ -95,7 +95,7 @@ bintray {
     key = project.bintrayApiKey
     publications = ['mavenCustom']
     pkg {
-        repo = 'gradle-pandoc-plugin'
+        repo = 'maven'
         userOrg = 'sleroy'
         name = 'gradle-pandoc-plugin'
         desc = 'A Gradle plugin for transforming Markdown to HTML/PDF/EBOOK with Pandoc'

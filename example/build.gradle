@@ -1,0 +1,13 @@
+buildscript { 
+    repositories {
+	mavenLocal()
+        jcenter()
+        maven { url 'http://dl.bintray.com/sleroy/maven' }
+    }
+    dependencies {
+        classpath 'com.metrixware:gradle-pandoc-plugin:0.1.0-SNAPSHOT'
+    }
+}
+apply plugin: 'com.metrixware.gradle.markdown'
+
+
