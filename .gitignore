@@ -13,3 +13,4 @@ build
 *.iws
 *.iml
 bin
+.gradle

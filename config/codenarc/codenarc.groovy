@@ -22,6 +22,7 @@ ruleset {
     ruleset('rulesets/imports.xml') {
         exclude 'MisorderedStaticImports'
 		exclude 'UnusedImport'
+		exclude 'NoWildcardImports'
     }
     ruleset('rulesets/naming.xml') {
         exclude 'PropertyName'

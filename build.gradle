@@ -16,6 +16,7 @@
 
 buildscript {
     repositories {
+	mavenCentral()
         jcenter()
     }
 
@@ -37,15 +38,17 @@ apply plugin: 'build-dashboard'
 apply from: 'gradle/publish.gradle'
 
 repositories {
+    mavenCentral()
     jcenter()
-      maven {url 'https://api.bintray.com/maven/sleroy/maven/gradle-pandoc-plugin' }
 }
 
 dependencies {
     compile gradleApi()
     compile 'org.apache.commons:commons-lang3:3.1'
 	compile 'nz.net.ultraq.lesscss:lesscss-compiler:1.0.2'
-    testCompile('org.spockframework:spock-core:0.6-groovy-1.8') {
+    testCompile('org.spockframework:spock-core:0.7-groovy-2.0') {
+
+
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
         exclude group: 'org.hamcrest', module: 'hamcrest-core'
     }
