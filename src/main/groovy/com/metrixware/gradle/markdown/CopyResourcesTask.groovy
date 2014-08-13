@@ -15,12 +15,12 @@
  */
 package com.metrixware.gradle.markdown
 
+import static com.metrixware.gradle.markdown.Utils.*
+
 import java.text.SimpleDateFormat
 
-import static com.metrixware.gradle.markdown.Utils.*
 import nz.net.ultraq.lesscss.LessCSSCompiler
 
-import org.apache.commons.io.FileUtils;
 import org.apache.tools.ant.filters.ReplaceTokens
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
