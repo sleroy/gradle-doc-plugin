@@ -52,9 +52,7 @@ class CopyResourcesTask extends DefaultTask {
 
 
 		LOGGER.debug("Creating temporary folder in $tmpFolder")
-//		project.fileTree(tmpFolder) { include '**/*' }.each { docFile ->
-//			docFile.delete()
-//		}
+		FileUtils.deleteDirectory(tmpFolder)
 		tmpFolder.mkdirs()
 		LOGGER.debug("Creating temporary templates folder in $tmpTemplatesFolder")
 		tmpTemplatesFolder.mkdirs()
@@ -76,7 +74,14 @@ class CopyResourcesTask extends DefaultTask {
 
 		LOGGER.info('Copy all md resources into a same folder')
 		// Copy all .md files into the same directory
-		FileUtils.deleteDirectory(tmpFolder);
+		project.fileTree(docFolder) { include '**/*.md' }.each { docFile ->
+			project.copy {
+				from(docFile) {
+					filter(ReplaceTokens, tokens: magicVariablesMap)
+				}
+				into tmpFolder
+			}
+		}
 
 		LOGGER.info('Copying global pictures...')
 		// Copy all resource directories straight over
