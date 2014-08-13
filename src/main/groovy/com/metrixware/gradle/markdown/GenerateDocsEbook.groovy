@@ -26,23 +26,23 @@ import org.gradle.api.tasks.TaskAction
  *
  */
 class GenerateDocsEbook extends DefaultTask{
-	
-	
+
+	/**
+	 * This task converts markdown files from tmp folder into ebooks. 
+	 */
 	@TaskAction
 	void runTask() {
 		def docTypes = indexDocsPerType(project)
-
-		def outputDirDoc = project.file(project.documentation.folder_outputdoc)
+		def outputDirDoc = project.file(project.buildDir.path + '/' +  project.documentation.folder_outputdoc)
 		def tmpFolder = project.file(project.documentation.folder_tmp)
 		def tmpTemplatesFolder = project.file(project.documentation.folder_tmp + '/templates')
-
 		// Currently only limited to tutorials
 		project.fileTree(tmpFolder) { include '**/*.md' }.each { docFile ->
 			def docFileBase = fileBaseName(docFile)
 			def docType     = docTypes.get(docFileBase)
 
 			if (project.documentation.conversions[docType].contains('ebook')) {
-				println 'Generating E-books for ${docFileBase}...'
+				println "Generating E-books for ${docFileBase}..."
 				project.exec{
 					commandLine=[
 						'pandoc',
@@ -53,15 +53,16 @@ class GenerateDocsEbook extends DefaultTask{
 						'--section-divs',
 						'--smart',
 						'--output=' + project.file("${outputDirDoc}/${docFileBase}.epub"),
-						"${docFile}"					
+						"${docFile}"
 					]
 					workingDir = tmpFolder
-					}
-				project.exec{commandLine=[
-					'ebook-convert',
-					project.file("${outputDirDoc}/${docFileBase}.epub"),
-					project.file("${outputDirDoc}/${docFileBase}.mobi")
-				]}
+				}
+				project.exec{
+					commandLine=[
+						'ebook-convert',
+						project.file("${outputDirDoc}/${docFileBase}.epub"),
+						project.file("${outputDirDoc}/${docFileBase}.mobi")
+					]}
 			}
 		}
 	}

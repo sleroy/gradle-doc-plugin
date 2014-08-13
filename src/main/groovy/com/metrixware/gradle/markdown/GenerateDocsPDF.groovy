@@ -27,26 +27,29 @@ import org.slf4j.LoggerFactory
  *
  */
 class GenerateDocsPDF extends DefaultTask {
-	
-	
+
+	/**
+	 * This task collects all html files generated inside the site/ folder and converts them into pdf.
+	 */
 	@TaskAction
 	void runTask() {
 		def docTypes = indexDocsPerType(project)
 
-		def outputDirDoc = project.file(project.documentation.folder_outputdoc)
+		def outputDirDoc = project.file(project.buildDir.path + '/' +  project.documentation.folder_outputdoc)
+		def outputDir = project.file(project.buildDir.path + '/' +  project.documentation.folder_output)
 		def tmpFolder = project.file(project.documentation.folder_tmp)
 
-		def webAppDirName = outputDirDoc
+
 		//		// Copy over the HTML documents into a directory from which we can host them
 		//		// using the Jetty server
 		//		project.copy {
 		//			from outputDirDoc
-		//			into webAppDirName
+		//			into outputDir
 		//		}
 
 		// Modify the copied HTML docs, removing the Google Analytics script as it
 		// blocks the wkhtmltopdf process
-		project.fileTree(webAppDirName) { include '*.html' }.each { docFile ->
+		project.fileTree(outputDir) { include '*.html' }.each { docFile ->
 			ant.replaceregexp(
 					file:    docFile,
 					match:   '<!-- Google Analytics script -->.*</script>',
@@ -56,7 +59,7 @@ class GenerateDocsPDF extends DefaultTask {
 		}
 
 		// Generate the PDF documents from the modified HTML documents
-		project.fileTree(webAppDirName) { include '*.html' }.each { docFile ->
+		project.fileTree(outputDir) { include '*.html' }.each { docFile ->
 			def docFileBase = fileBaseName(docFile)
 			def docType     = docTypes.get(docFileBase)
 
@@ -67,20 +70,20 @@ class GenerateDocsPDF extends DefaultTask {
 						'wkhtmltopdf',
 						'--print-media-type',
 						'--dpi',
-						'150',
+						"${project.documentation.pdfDpi}",
 						'--margin-bottom',
-						'15',
+						"${project.documentation.marginBottom}",
 						'--footer-spacing',
-						'5',
+						"${project.documentation.footerSpacing}",
 						'--footer-font-size',
-						'8',
+						"${project.documentation.footerFontSize}",
 						'--footer-font-name',
-						'\'Open Sans\'',
+						"'${project.documentation.footerFont}'",
 						'--footer-right',
-						'Page [page] of [topage]',
+						"${project.documentation.footerRightText}",
 						'--header-font-name',
-						'\'Open Sans\'',
-						"${tmpFolder}/${docFile.name}",
+						"'${project.documentation.headerFont}'",
+						"${outputDir}/${docFile.name}",
 						project.file("${outputDirDoc}/${docFileBase}.pdf")
 					]
 					workingDir = tmpFolder
@@ -90,3 +93,4 @@ class GenerateDocsPDF extends DefaultTask {
 
 	}
 }
+

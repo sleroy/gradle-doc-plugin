@@ -28,24 +28,27 @@ import org.slf4j.LoggerFactory
  *
  */
 class GenerateDocsHTML extends DefaultTask {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger('markdown-html')
-	
-	
+
+	/**
+	 * This task collects all md files into the tmp folder and converts them into html files, and then copy resources required to display the pictures
+	 */
 	@TaskAction
 	void runTask() {
 		def docTypes = indexDocsPerType(project)
 
-		def outputDirDoc = project.file(project.documentation.folder_outputdoc)
+		def outputDir = project.file(project.buildDir.path + '/' +  project.documentation.folder_output)
 		def tmpFolder = project.file(project.documentation.folder_tmp)
 		def tmpTemplatesFolder = project.file(project.documentation.folder_tmp + '/templates')
+
 		project.fileTree(tmpFolder) { include '**/*.md' }.each { docFile ->
 			def docFileBase = fileBaseName(docFile)
 			def docType     = docTypes.get(docFileBase)
 
 			if (project.documentation.conversions[docType].contains('html')) {
 				println 'Generating HTML doc for ${docFileBase}...'
-				println project.file("${outputDirDoc}/${docFileBase}.html")
+				println project.file("${outputDir}/${docFileBase}.html")
 				project.exec({
 					commandLine = [
 						'pandoc',
@@ -56,7 +59,7 @@ class GenerateDocsHTML extends DefaultTask {
 						'--section-divs',
 						'--no-highlight',
 						'--smart',
-						'--output=' + project.file("${outputDirDoc}/${docFileBase}.html"),
+						'--output=' + project.file("${outputDir}/${docFileBase}.html"),
 						"${docFile}"
 					]
 					workingDir = tmpFolder
@@ -64,7 +67,7 @@ class GenerateDocsHTML extends DefaultTask {
 				)
 			}
 		}
-		LOGGER.info('Moving generated files into distribution site')
+		LOGGER.info('Copying resources(pic, scripts, styles) files into distribution site')
 		// Copy over resources needed for the HTML docs
 		project.copy {
 			from(tmpFolder) {
@@ -72,7 +75,7 @@ class GenerateDocsHTML extends DefaultTask {
 				include 'scripts/**'
 				include 'styles/**'
 			}
-			into outputDirDoc
+			into outputDir
 		}
 	}
 

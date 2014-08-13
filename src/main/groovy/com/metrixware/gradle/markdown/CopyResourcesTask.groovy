@@ -16,10 +16,11 @@
 package com.metrixware.gradle.markdown
 
 import java.text.SimpleDateFormat
-import static com.metrixware.gradle.markdown.Utils.*
 
+import static com.metrixware.gradle.markdown.Utils.*
 import nz.net.ultraq.lesscss.LessCSSCompiler
 
+import org.apache.commons.io.FileUtils;
 import org.apache.tools.ant.filters.ReplaceTokens
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
@@ -38,17 +39,18 @@ class CopyResourcesTask extends DefaultTask {
 		def scriptsFolder = project.file(project.documentation.folder_scripts)
 		def stylesFolder = project.file(project.documentation.folder_styles)
 		def templatesFolder = project.file(project.documentation.folder_templates)
-		def outputDir = project.file(project.documentation.folder_output)
-		def outputDirDoc = project.file(project.documentation.folder_outputdoc)
+		def outputDir = project.file(project.buildDir.path + '/' +  project.documentation.folder_output)
+		def outputDirDoc = project.file(project.buildDir.path + '/' +  project.documentation.folder_outputdoc)
 		def tmpFolder = project.file(project.documentation.folder_tmp)
 		def tmpTemplatesFolder = project.file(project.documentation.folder_tmp + '/templates')
 
 
 		def docTypeNames = getTemplates(project)
 
-
+		
 
 		LOGGER.debug("Creating temporary folder in $tmpFolder")
+		
 		tmpFolder.mkdirs()
 		LOGGER.debug("Creating temporary templates folder in $tmpTemplatesFolder")
 		tmpTemplatesFolder.mkdirs()
