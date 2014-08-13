@@ -47,7 +47,10 @@ class MarkdownPlugin implements Plugin<Project> {
 		project.task('copyResources',
 		type: CopyResourcesTask,
 		group: DOCUMENTATION,
-		dependsOn: ['checkStructure', 'checkTools'],
+		dependsOn: [
+			'checkStructure',
+			'checkTools'
+		],
 		description: 'Copy the documentation resources into the temporary folder to produce the documentation.')
 
 

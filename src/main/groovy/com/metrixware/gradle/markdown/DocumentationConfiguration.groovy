@@ -15,6 +15,11 @@
  */
 package com.metrixware.gradle.markdown
 
+import groovy.lang.Closure
+
+import java.util.HashMap
+import java.util.Map
+
 class DocumentationConfiguration {
 	// Folder location
 	def folder_docs ='docs'
@@ -28,16 +33,13 @@ class DocumentationConfiguration {
 	def conversions = [
 		articles:  ['html', 'pdf'],
 		manual: ['html', 'ebook', 'pdf']]
-	
-	// Binaries	
+	def velocityFileFilter = '**/*.md'
+	// Binaries
 	def panDocBin = 'pandoc'
 	def ebookConvertBin = 'ebook-convert'
 	def wkhtmltopdfBin = 'wkhtmltopdf'
-	
-	// Variables and template variables.
-	def buildVariables = [:]
-	def templateVariables = [:]
-	
+
+
 	// PDF Options
 	def footerFont = 'Open Sans'
 	def headerFont = 'Open Sans'
@@ -46,4 +48,15 @@ class DocumentationConfiguration {
 	def footerSpacing = 5
 	def footerFontSize = 8
 	def footerRightText = 'Page [page] of [topage]'
+	// Variables and template variables.
+	def templateVariables = new HashMap<String, Object>()
+
+	void context(Map<String, Object> map) {
+		templateVariables.putAll(map)
+	}
+
+	void context(Closure<?> closure) {
+		closure.setDelegate(contextValues)
+		closure.call()
+	}
 }

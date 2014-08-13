@@ -15,17 +15,17 @@
  */
 
 buildscript {
-    repositories {
-	mavenCentral()
-        jcenter()
-    }
+	repositories {
+		mavenCentral()
+		jcenter()
+	}
 
-    dependencies {
-        classpath 'net.saliman:gradle-cobertura-plugin:2.2.2'
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.2.4'
-        classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.7.0'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.3'
-    }
+	dependencies {
+		classpath 'net.saliman:gradle-cobertura-plugin:2.2.2'
+		classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:0.2.4'
+		classpath 'nl.javadude.gradle.plugins:license-gradle-plugin:0.7.0'
+		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.3'
+	}
 }
 
 apply plugin: 'groovy'
@@ -38,21 +38,25 @@ apply plugin: 'build-dashboard'
 apply from: 'gradle/publish.gradle'
 
 repositories {
-    mavenCentral()
-    jcenter()
+	mavenCentral()
+	jcenter()
 }
 
 dependencies {
-    compile gradleApi()
-    compile 'org.apache.commons:commons-lang3:3.1'
+	compile gradleApi()
+	compile 'org.apache.commons:commons-lang3:3.1'
 	compile 'nz.net.ultraq.lesscss:lesscss-compiler:1.0.2'
-    testCompile('org.spockframework:spock-core:0.7-groovy-2.0') {
+	compile 'org.apache.velocity:velocity:1.7'
+	compile 'commons-io:commons-io:2.4'
 
 
-        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
-        exclude group: 'org.hamcrest', module: 'hamcrest-core'
-    }
-    testCompile 'cglib:cglib-nodep:2.2.2'
+	testCompile('org.spockframework:spock-core:0.7-groovy-2.0') {
+
+
+		exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+		exclude group: 'org.hamcrest', module: 'hamcrest-core'
+	}
+	testCompile 'cglib:cglib-nodep:2.2.2'
 }
 
 //license {
@@ -67,23 +71,21 @@ dependencies {
 //}
 
 cobertura {
-    coverageFormats = ['html', 'xml']
-    coverageSourceDirs = sourceSets.main.groovy.srcDirs
+	coverageFormats = ['html', 'xml']
+	coverageSourceDirs = sourceSets.main.groovy.srcDirs
 }
 
 codenarc {
-    configFile = file('config/codenarc/codenarc.groovy')
-    // run codenarc on production sources only
-    sourceSets = [project.sourceSets.main]
+	configFile = file('config/codenarc/codenarc.groovy')
+	// run codenarc on production sources only
+	sourceSets = [project.sourceSets.main]
 }
 
 task sourceJar(type: Jar) {
-    group 'Build'
-    description 'An archive of the source code'
-    classifier 'sources'
-    from sourceSets.main.allSource
+	group 'Build'
+	description 'An archive of the source code'
+	classifier 'sources'
+	from sourceSets.main.allSource
 }
 
-artifacts {
-    sourceJar
-}
+artifacts { sourceJar }

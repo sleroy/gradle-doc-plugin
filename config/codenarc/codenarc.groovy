@@ -23,6 +23,7 @@ ruleset {
         exclude 'MisorderedStaticImports'
 		exclude 'UnusedImport'
 		exclude 'NoWildcardImports'
+		exclude 'UnnecessaryGroovyImport'
     }
     ruleset('rulesets/naming.xml') {
         exclude 'PropertyName'
