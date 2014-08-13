@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat
 
 import nz.net.ultraq.lesscss.LessCSSCompiler
 
+import org.apache.commons.io.FileUtils
 import org.apache.tools.ant.filters.ReplaceTokens
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
@@ -37,6 +38,7 @@ class CopyResourcesTask extends DefaultTask {
 	void runTask() {
 		def docFolder = project.file(project.documentation.folder_docs)
 		def scriptsFolder = project.file(project.documentation.folder_scripts)
+		def imagesFolder = project.file(project.documentation.folder_images)
 		def stylesFolder = project.file(project.documentation.folder_styles)
 		def templatesFolder = project.file(project.documentation.folder_templates)
 		def outputDir = project.file(project.buildDir.path + '/' +  project.documentation.folder_output)
@@ -50,7 +52,9 @@ class CopyResourcesTask extends DefaultTask {
 
 
 		LOGGER.debug("Creating temporary folder in $tmpFolder")
-
+//		project.fileTree(tmpFolder) { include '**/*' }.each { docFile ->
+//			docFile.delete()
+//		}
 		tmpFolder.mkdirs()
 		LOGGER.debug("Creating temporary templates folder in $tmpTemplatesFolder")
 		tmpTemplatesFolder.mkdirs()
@@ -65,8 +69,8 @@ class CopyResourcesTask extends DefaultTask {
 		def documentVersion = new SimpleDateFormat('yyyyMMdd - dd MMMM yyyy', Locale.ENGLISH).format(new Date())
 
 		def magicVariablesMap = new Properties()
-		magicVariablesMap['documentVersion']=  documentVersion
-		magicVariablesMap['projectVersion']=  project.version
+		magicVariablesMap['documentVersion']=  documentVersion.toString()
+		magicVariablesMap['projectVersion']=  project.version.toString()
 		magicVariablesMap.putAll(project.documentation.templateVariables)
 
 
@@ -81,8 +85,14 @@ class CopyResourcesTask extends DefaultTask {
 			}
 		}
 
+		LOGGER.info('Copying global pictures...')
+		// Copy all resource directories straight over
+		project.copy {
+			from imagesFolder
+			into "${tmpFolder.path}/${imagesFolder.name}"
+		}
 
-		LOGGER.info('Copying pictures...')
+		LOGGER.info('Copying per-template pictures...')
 		docTypeNames.each { docTypeName ->
 			def imagesDir = project.file("${docFolder}/${docTypeName}/images")
 			project.copy {

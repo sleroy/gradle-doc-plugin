@@ -24,6 +24,7 @@ class DocumentationConfiguration {
 	// Folder location
 	def folder_docs ='docs'
 	def folder_scripts = 'scripts'
+	def folder_images = 'images'
 	def folder_styles = 'styles'
 	def folder_templates = 'templates'
 	def folder_output = 'site'
