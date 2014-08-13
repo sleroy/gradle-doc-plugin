@@ -75,6 +75,31 @@ Configuration
 This class defines the configuration offered by the plugin :
 
 
+	class DocumentationConfiguration {
+		def folder_docs ='docs'
+		def folder_scripts = 'scripts'
+		def folder_styles = 'styles'
+		def folder_templates = 'templates'
+		def folder_output = 'site'
+		def folder_outputdoc = 'site/doc'
+		def folder_tmp = 'tmp'
+	
+		def conversions = [
+			articles:  ['html', 'pdf'],
+			manual: ['html', 'ebook', 'pdf']]
+		def panDocBin = 'pandoc'
+		def ebookConvertBin = 'ebook-convert'
+		def wkhtmltopdfBin = 'wkhtmltopdf'
+		def variables = [:]
+		def footerFont = 'Open Sans'
+		def headerFont = 'Open Sans'
+		def pdfDpi = 120
+		def marginBottom = 15
+		def footerSpacing = 5
+		def footerFontSize = 8
+		def footerRightText = 'Page [page] of [topage]'
+	}
+	
 
 
 History
