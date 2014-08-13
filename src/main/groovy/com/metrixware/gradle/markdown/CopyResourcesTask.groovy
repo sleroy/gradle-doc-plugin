@@ -76,14 +76,7 @@ class CopyResourcesTask extends DefaultTask {
 
 		LOGGER.info('Copy all md resources into a same folder')
 		// Copy all .md files into the same directory
-		project.fileTree(docFolder) { include '**/*.md' }.each { docFile ->
-			project.copy {
-				from(docFile) {
-					filter(ReplaceTokens, tokens: magicVariablesMap)
-				}
-				into tmpFolder
-			}
-		}
+		FileUtils.deleteDirectory(tmpFolder);
 
 		LOGGER.info('Copying global pictures...')
 		// Copy all resource directories straight over

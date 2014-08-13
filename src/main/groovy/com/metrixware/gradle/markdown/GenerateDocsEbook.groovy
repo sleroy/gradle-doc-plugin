@@ -18,6 +18,7 @@ package com.metrixware.gradle.markdown
 import static com.metrixware.gradle.markdown.Utils.*
 
 import org.gradle.api.DefaultTask
+import org.gradle.api.GradleScriptException
 import org.gradle.api.tasks.TaskAction
 
 /**
@@ -40,8 +41,10 @@ class GenerateDocsEbook extends DefaultTask{
 		project.fileTree(tmpFolder) { include '**/*.md' }.each { docFile ->
 			def docFileBase = fileBaseName(docFile)
 			def docType     = docTypes.get(docFileBase)
-
-			if (project.documentation.conversions[docType].contains('ebook')) {
+			if (project.documentation.conversions[docType] == null) {
+				throw new GradleScriptException("Markdown files found outside the docs folder, please verify $docFile", null)
+			}
+			if (project.documentation.conversions[docType].contains('ebook') == null) {
 				println "Generating E-books for ${docFileBase}..."
 				project.exec{
 					commandLine=[
