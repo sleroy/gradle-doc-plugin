@@ -33,28 +33,32 @@ class InitDocProjectTask extends DefaultTask {
 
 		LOGGER.info('Creating documentation folder...')
 		if (!docFolder.exists() && !docFolder.mkdirs()) {
-			LOGGER.error('Could not create the folder $docFolder')
+			LOGGER.error("Could not create the folder $docFolder")
 		}
 		LOGGER.info('Creating scripts folder...')
 		if (!scriptsFolder.exists() && !scriptsFolder.mkdirs()) {
-			LOGGER.error('Could not create the folder $scriptsFolder')
+			LOGGER.error("Could not create the folder $scriptsFolder")
 		}
 		LOGGER.info('Creating styles folder...')
 		if (!stylesFolder.exists() && !stylesFolder.mkdirs()) {
-			LOGGER.error('Could not create the folder $stylesFolder')
+			LOGGER.error("Could not create the folder $stylesFolder")
 		}
 		LOGGER.info('Creating templates folder...')
 		if (!templatesFolder.exists() && !templatesFolder.mkdirs()) {
-			LOGGER.error('Could not create the folder templatesFolder')
+			LOGGER.error("Could not create the folder $templatesFolder")
 		}
 		LOGGER.info('Creating temporary folder...')
 		if (!folderTmp.exists() && !folderTmp.mkdirs()) {
-			LOGGER.error('Could not create the folder $folderTmp')
+			LOGGER.error("Could not create the folder $folderTmp")
 		}
 		for (String key : project.documentation.conversions.keySet()) {
 			def tpl = project.file(templatesFolder.path +'/' + key)
 			if (!tpl.exists() && !tpl.mkdirs()) {
-				LOGGER.error('Could not create the folder $tpl')
+				LOGGER.error("Could not create the folder $tpl")
+			}
+			def docTempl = project.file(docFolder.path +'/' + key)
+			if (!docTempl.exists() && !docTempl.mkdirs()) {
+				LOGGER.error("Could not create the folder $docTempl")
 			}
 		}
 	}

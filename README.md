@@ -17,15 +17,15 @@ Installation
 
 Use the following snippet
 
-buildscript { 
-    repositories {
-	mavenLocal()
-        jcenter()
-        maven { url 'http://dl.bintray.com/sleroy/maven' }
-    }
-    dependencies {
-        classpath 'com.metrixware:gradle-pandoc-plugin:0.1.0'
-    }
+	buildscript { 
+    	repositories {
+		mavenLocal()
+        	jcenter()
+        	maven { url 'http://dl.bintray.com/sleroy/maven' }
+    	}
+    	dependencies {
+        	classpath 'com.metrixware:gradle-pandoc-plugin:0.1.0'
+    	}
 }
 apply plugin: 'markdown'
 
@@ -33,10 +33,55 @@ apply plugin: 'markdown'
 Usage
 -----
 
+To create the default project structure to store your documentation, please write the following command :
+
+	gradle initDocProject
+
+By default the documentation is generated into the folder **site** inside your buildDir.
+
+The plugin requires several programs installed on your machine. Basically, on Ubuntu system, install the following packages `pandoc, wkhtmltopdf, calibre, calibre-bin`.
+
+To check if your environment is correctly configured, execute the following command : 
+
+	gradle checkTools
+	 
+To check if your project structure matches your project documentation configuration : 
+	
+	gradle checkStructure
+	
+The default structure looks like : 
+	
+	├── build
+	├── build.gradle
+	├── docs
+	│   ├── articles
+	│   └── manual
+	├── scripts
+	├── styles
+	├── templates
+	│   ├── articles
+	│   └── manual
+	└── tmp
+
+*	**docs** : where you will store your markdown files, subfolders are created depending of your document templates (default is `articles`, `manual`)
+*	**scripts** : your JS resources
+* 	**styles** : your CSS resources
+* 	**templates** : your document templates (HTML, EPub)
+* 	**tmp** : the temporary ressources and artifacts produced during the configuration will be stored there.	
+
+Configuration
+------------------
+
+This class defines the configuration offered by the plugin :
+
+
+
+
 History
 -------
 
-### 0.1.0
+### 0.1.1 Operational version
+### 0.1.0 Buggy version
 
  * First release
 
