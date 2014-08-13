@@ -49,19 +49,25 @@ class GenerateDocsHTML extends DefaultTask {
 			if (project.documentation.conversions[docType].contains('html')) {
 				println 'Generating HTML doc for ${docFileBase}...'
 				println project.file("${outputDir}/${docFileBase}.html")
+				def generateCmdLine = [
+					'pandoc',
+					'--write=html5',
+					'--template=' + project.file("${tmpTemplatesFolder}/${docType}.html"),
+					'--toc',
+					'--toc-depth=4',
+					'--section-divs',
+					'--no-highlight',
+					'--smart'
+				]
+				for (myVar in project.documentation.templateVariables) {
+					generateCmdLine.add("--variable=${myVar.key}:${myVar.value}")
+				}
+				generateCmdLine.addAll( [
+							'--output=' + project.file("${outputDir}/${docFileBase}.html"),
+							"${docFile}"
+						])
 				project.exec({
-					commandLine = [
-						'pandoc',
-						'--write=html5',
-						'--template=' + project.file("${tmpTemplatesFolder}/${docType}.html"),
-						'--toc',
-						'--toc-depth=4',
-						'--section-divs',
-						'--no-highlight',
-						'--smart',
-						'--output=' + project.file("${outputDir}/${docFileBase}.html"),
-						"${docFile}"
-					]
+					commandLine = generateCmdLine
 					workingDir = tmpFolder
 				}
 				)

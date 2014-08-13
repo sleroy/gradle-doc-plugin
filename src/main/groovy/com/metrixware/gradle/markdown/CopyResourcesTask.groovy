@@ -104,7 +104,7 @@ class CopyResourcesTask extends DefaultTask {
 		def magicVariablesMap = new Properties()
 		properties['documentVersion']=  documentVersion
 		properties['projectVersion']=  project.version
-		properties.putAll(project.documentation.variables)
+		properties.putAll(project.documentation.buildVariables)
 
 		project.copy {
 			from(templatesFolder) {

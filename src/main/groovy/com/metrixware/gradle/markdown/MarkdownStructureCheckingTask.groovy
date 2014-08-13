@@ -48,8 +48,10 @@ class MarkdownStructureCheckingTask extends DefaultTask {
 			LOGGER.error('At least one folder is missing, please check the configuration of your project.')
 			throw new GradleScriptException('could not generate markdown configuration, the project configuration is uncomplete', null)
 		}
+		LOGGER.info('Checks the template folders in docs')
+
 		for (String key : project.documentation.conversions.keySet()) {
-			def tpl = project.file(templatesFolder.path +'/' + key)
+			def tpl = project.file(docFolder.path +'/' + key)
 			if (!tpl.exists()) {
 				LOGGER.error('Required template folder $tpl is missing.')
 				throw new GradleScriptException("Required template folder $tpl is missing.", null)

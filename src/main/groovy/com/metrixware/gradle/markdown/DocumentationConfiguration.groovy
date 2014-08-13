@@ -16,6 +16,7 @@
 package com.metrixware.gradle.markdown
 
 class DocumentationConfiguration {
+	// Folder location
 	def folder_docs ='docs'
 	def folder_scripts = 'scripts'
 	def folder_styles = 'styles'
@@ -23,14 +24,21 @@ class DocumentationConfiguration {
 	def folder_output = 'site'
 	def folder_outputdoc = 'site/doc'
 	def folder_tmp = 'tmp'
-
+	// Templates required to generate the doc and conversion format supported
 	def conversions = [
 		articles:  ['html', 'pdf'],
 		manual: ['html', 'ebook', 'pdf']]
+	
+	// Binaries	
 	def panDocBin = 'pandoc'
 	def ebookConvertBin = 'ebook-convert'
 	def wkhtmltopdfBin = 'wkhtmltopdf'
-	def variables = [:]
+	
+	// Variables and template variables.
+	def buildVariables = [:]
+	def templateVariables = [:]
+	
+	// PDF Options
 	def footerFont = 'Open Sans'
 	def headerFont = 'Open Sans'
 	def pdfDpi = 120

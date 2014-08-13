@@ -52,14 +52,14 @@ class InitDocProjectTask extends DefaultTask {
 			LOGGER.error("Could not create the folder $folderTmp")
 		}
 		for (String key : project.documentation.conversions.keySet()) {
-			def tpl = project.file(templatesFolder.path +'/' + key)
-			if (!tpl.exists() && !tpl.mkdirs()) {
-				LOGGER.error("Could not create the folder $tpl")
-			}
 			def docTempl = project.file(docFolder.path +'/' + key)
 			if (!docTempl.exists() && !docTempl.mkdirs()) {
 				LOGGER.error("Could not create the folder $docTempl")
 			}
+			project.file(docFolder.path +'/' + key +'/' + project.documentation.folder_styles).mkdirs()
+			project.file(docFolder.path +'/' + key +'/' + project.documentation.folder_scripts).mkdirs()
+			project.file(docFolder.path +'/' + key +'/images').mkdirs()
+			
 		}
 	}
 }
