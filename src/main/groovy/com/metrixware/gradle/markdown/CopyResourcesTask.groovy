@@ -23,34 +23,129 @@ import nz.net.ultraq.lesscss.LessCSSCompiler
 
 import org.apache.commons.io.FileUtils
 import org.apache.tools.ant.filters.ReplaceTokens
-import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-class CopyResourcesTask extends DefaultTask {
+class CopyResourcesTask extends DocumentationTask {
 
 	static final LESS_EXTENSION = '**/*.less'
 	private static final Logger LOGGER = LoggerFactory.getLogger('markdown-copy')
 
+	void copyGlobalResources() {
+		LOGGER.info('Copying global pictures...')
+		project.copy {
+			from project.file(project.documentation.folder_images)
+			into "${tmpFolder.path}/${imagesFolder.name}"
+		}
+
+		LOGGER.info('Copying global JS scripts...')
+		project.copy {
+			from project.file(project.documentation.folder_scripts)
+			into "${tmpFolder.path}/${scriptsFolder.name}"
+		}
+
+		LOGGER.info('Copying global CSS ...')
+		project.copy {
+			from(stylesFolder) { exclude LESS_EXTENSION }
+			into "${tmpFolder.path}/styles"
+		}
+
+		LOGGER.info('Copying global LESS ...')
+		LessCSSCompiler compiler = new LessCSSCompiler()
+		project.fileTree(stylesFolder) { include LESS_EXTENSION}.each { lessFile ->
+			def lessFileBase = fileBaseName(lessFile)
+			compiler.compile(lessFile, project.file("${tmpFolder.path}/styles/${lessFileBase}.css"))
+		}
+	}
+
+	void copyMarkdownFiles() {
+		LOGGER.info('Copy all md resources into a same folder')
+		// Copy all .md files into the same directory
+		docTypeNames.each { docTypeName ->
+			def mdOutputDir = new File(tmpFolder+ '/' + docTypeName+'/')
+			project.fileTree(docFolder + '/' + docTypeName) { include '**/*.md' }.each { docFile ->
+				project.copy {
+					from(docFile) {
+						filter(ReplaceTokens, tokens: magicVariablesMap)
+					}
+					into mdOutputDir
+				}
+			}
+		}
+
+	}
+
+	void copyPerTemplateResources() {
+
+		LOGGER.info('Copying per-template resources...')
+
+		docTypeNames.each { docTypeName ->
+			def imagesDir = project.file("${docFolder}/${docTypeName}/images")
+			def imageOutputDir = new File(tmpFolder+ '/' + docTypeName+'/images')
+			local.mkdirs()
+			project.copy {
+				from imagesDir
+				into imageOutputDir
+			}
+			def cssDir = project.file("${docFolder}/${docTypeName}/css")
+			def cssOutputDir = new File(tmpFolder+ '/' + docTypeName+'/css')
+			local.mkdirs()
+			project.copy {
+				from cssDir
+				into cssOutputDir
+			}
+			def scriptDir= project.file("${docFolder}/${docTypeName}/scripts")
+			def scriptOutputDir = new File(tmpFolder+ '/' + docTypeName+'/scripts')
+			local.mkdirs()
+			project.copy {
+				from scriptDir
+				into scriptOutputDir
+			}
+		}
+
+
+	}
 
 	@TaskAction
 	void runTask() {
-		def docFolder = project.file(project.documentation.folder_docs)
-		def scriptsFolder = project.file(project.documentation.folder_scripts)
-		def imagesFolder = project.file(project.documentation.folder_images)
-		def stylesFolder = project.file(project.documentation.folder_styles)
-		def templatesFolder = project.file(project.documentation.folder_templates)
-		def outputDir = project.file(project.buildDir.path + '/' +  project.documentation.folder_output)
-		def outputDirDoc = project.file(project.buildDir.path + '/' +  project.documentation.folder_outputdoc)
-		def tmpFolder = project.file(project.documentation.folder_tmp)
-		def tmpTemplatesFolder = project.file(project.documentation.folder_tmp + '/templates')
 
 
-		def docTypeNames = getTemplates(project)
+		initFolders()
+
+		LOGGER.info("Document templates found : $docTypeNames")
 
 
+		// Copy global resource
+		copyGlobalResources()
 
+		// Copy template resources
+		copyPerTemplateResources()
+
+		// Copy markdown files
+		copyMarkdownFiles()
+
+		// Preprocess templates
+		preprocessTemplates()
+
+
+	}
+
+	void preprocessTemplates() {
+
+
+		LOGGER.info('Preprocessing templates...')
+
+		project.copy {
+			from(templatesFolder) {
+				filter(ReplaceTokens, tokens: magicVariablesMap)
+			}
+			into tmpTemplatesFolder
+		}
+
+	}
+
+	private initFolders() {
 		LOGGER.debug("Creating temporary folder in $tmpFolder")
 		FileUtils.deleteDirectory(tmpFolder)
 		tmpFolder.mkdirs()
@@ -61,71 +156,11 @@ class CopyResourcesTask extends DefaultTask {
 		LOGGER.debug('Creating output documentation directory')
 		outputDirDoc.mkdirs()
 
-		LOGGER.info("Document templates found : $docTypeNames")
-
-		// Preprocess the template files to insert the correct document date and project version
-		def documentVersion = new SimpleDateFormat('yyyyMMdd - dd MMMM yyyy', Locale.ENGLISH).format(new Date())
-
-		def magicVariablesMap = new Properties()
-		magicVariablesMap['documentVersion']=  documentVersion.toString()
-		magicVariablesMap['projectVersion']=  project.version.toString()
-		magicVariablesMap.putAll(project.documentation.templateVariables)
-
-
-		LOGGER.info('Copy all md resources into a same folder')
-		// Copy all .md files into the same directory
-		project.fileTree(docFolder) { include '**/*.md' }.each { docFile ->
-			project.copy {
-				from(docFile) {
-					filter(ReplaceTokens, tokens: magicVariablesMap)
-				}
-				into tmpFolder
-			}
-		}
-
-		LOGGER.info('Copying global pictures...')
-		// Copy all resource directories straight over
-		project.copy {
-			from imagesFolder
-			into "${tmpFolder.path}/${imagesFolder.name}"
-		}
-
-		LOGGER.info('Copying per-template pictures...')
 		docTypeNames.each { docTypeName ->
-			def imagesDir = project.file("${docFolder}/${docTypeName}/images")
-			project.copy {
-				from imagesDir
-				into "${tmpFolder}/images"
-			}
+			new File(outputDir, docTypeName).mkdirs()
+			new File(outputDirDoc, docTypeName).mkdirs()
 		}
-		LOGGER.info('Copying JS scripts...')
-		// Copy all resource directories straight over
-		project.copy {
-			from scriptsFolder
-			into "${tmpFolder.path}/${scriptsFolder.name}"
-		}
-
-		LOGGER.info('Copying CSS and compiling LESS files before copy...')
-		// Copy over stylesheets, compiling LessCSS files into CSS
-		project.copy {
-			from(stylesFolder) { exclude LESS_EXTENSION }
-			into "${tmpFolder.path}/styles"
-		}
-		LessCSSCompiler compiler = new LessCSSCompiler()
-		project.fileTree(scriptsFolder) { include LESS_EXTENSION}.each { lessFile ->
-			def lessFileBase = fileBaseName(lessFile)
-			compiler.compile(lessFile, project.file("${tmpFolder.path}/styles/${lessFileBase}.css"))
-		}
-		LOGGER.info('Preprocessing templates...')
-
-		project.copy {
-			from(templatesFolder) {
-				filter(ReplaceTokens, tokens: magicVariablesMap)
-			}
-			into tmpTemplatesFolder
-		}
-
-
-
 	}
+
+
 }

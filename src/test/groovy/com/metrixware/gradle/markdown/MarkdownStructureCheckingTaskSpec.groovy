@@ -18,8 +18,11 @@ package com.metrixware.gradle.markdown
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.testfixtures.ProjectBuilder
+
 import spock.lang.Specification
+
 import org.gradle.api.GradleScriptException
+import org.gradle.api.tasks.TaskInstantiationException;
 
 class MarkdownStructureCheckingTaskSpec extends Specification {
 	
@@ -36,14 +39,12 @@ class MarkdownStructureCheckingTaskSpec extends Specification {
 		markdownToHtmlTask.runTask();
 
 		then:
-		markdownToHtmlTask != null		
 		thrown(GradleScriptException);				
 
 	}
 	
 	def "Creates a project; initializes it, check it"() {
 		def Project project = ProjectBuilder.builder().build()		
-		
 		expect:
 		project.tasks.findByName('checkStructure') == null
 

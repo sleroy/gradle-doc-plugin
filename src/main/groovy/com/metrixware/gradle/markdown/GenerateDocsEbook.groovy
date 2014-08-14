@@ -26,7 +26,7 @@ import org.gradle.api.tasks.TaskAction
  * @author sleroy
  *
  */
-class GenerateDocsEbook extends DefaultTask{
+class GenerateDocsEbook extends DocumentationTask {
 
 	/**
 	 * This task converts markdown files from tmp folder into ebooks. 
@@ -55,7 +55,7 @@ class GenerateDocsEbook extends DefaultTask{
 						'--toc-depth=4',
 						'--section-divs',
 						'--smart',
-						'--output=' + project.file("${outputDirDoc}/${docFileBase}.epub"),
+						'--output=' + project.file("${outputDirDoc}/${docType}/${docFileBase}.epub"),
 						"${docFile}"
 					]
 					workingDir = tmpFolder
@@ -63,8 +63,8 @@ class GenerateDocsEbook extends DefaultTask{
 				project.exec{
 					commandLine=[
 						'ebook-convert',
-						project.file("${outputDirDoc}/${docFileBase}.epub"),
-						project.file("${outputDirDoc}/${docFileBase}.mobi")
+						project.file("${outputDirDoc}/${docType}/${docFileBase}.epub"),
+						project.file("${outputDirDoc}/${docType}/${docFileBase}.mobi")
 					]}
 			}
 		}

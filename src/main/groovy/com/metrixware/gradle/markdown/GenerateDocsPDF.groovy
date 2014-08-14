@@ -26,19 +26,14 @@ import org.slf4j.LoggerFactory
  * @author sleroy
  *
  */
-class GenerateDocsPDF extends DefaultTask {
+class GenerateDocsPDF extends DocumentationTask {
 
 	/**
 	 * This task collects all html files generated inside the site/ folder and converts them into pdf.
 	 */
 	@TaskAction
 	void runTask() {
-		def docTypes = indexDocsPerType(project)
-
-		def outputDirDoc = project.file(project.buildDir.path + '/' +  project.documentation.folder_outputdoc)
-		def outputDir = project.file(project.buildDir.path + '/' +  project.documentation.folder_output)
-		def tmpFolder = project.file(project.documentation.folder_tmp)
-
+	
 
 		//		// Copy over the HTML documents into a directory from which we can host them
 		//		// using the Jetty server
@@ -61,7 +56,7 @@ class GenerateDocsPDF extends DefaultTask {
 		// Generate the PDF documents from the modified HTML documents
 		project.fileTree(outputDir) { include '*.html' }.each { docFile ->
 			def docFileBase = fileBaseName(docFile)
-			def docType     = docTypes.get(docFileBase)
+			def docType     = docTypeNames.get(docFileBase)
 
 			if (project.documentation.conversions[docType].contains('pdf')) {
 				println "Generating PDF doc for ${docFileBase}..."
@@ -84,7 +79,7 @@ class GenerateDocsPDF extends DefaultTask {
 						'--header-font-name',
 						"'${project.documentation.headerFont}'",
 						"${outputDir}/${docFile.name}",
-						project.file("${outputDirDoc}/${docFileBase}.pdf")
+						project.file("${outputDirDoc}/${docType}/${docFileBase}.pdf")
 					]
 					workingDir = tmpFolder
 				}

@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory
  * @author sleroy
  *
  */
-class GenerateDocsHTML extends DefaultTask {
+class GenerateDocsHTML extends DocumentationTask {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger('markdown-html')
 
@@ -36,19 +36,14 @@ class GenerateDocsHTML extends DefaultTask {
 	 */
 	@TaskAction
 	void runTask() {
-		def docTypes = indexDocsPerType(project)
-
-		def outputDir = project.file(project.buildDir.path + '/' +  project.documentation.folder_output)
-		def tmpFolder = project.file(project.documentation.folder_tmp)
-		def tmpTemplatesFolder = project.file(project.documentation.folder_tmp + '/templates')
 
 		project.fileTree(tmpFolder) { include '**/*.md' }.each { docFile ->
 			def docFileBase = fileBaseName(docFile)
-			def docType     = docTypes.get(docFileBase)
+			def docType     = docTypeNames.get(docFileBase)
 
 			if (project.documentation.conversions[docType].contains('html')) {
 				println 'Generating HTML doc for ${docFileBase}...'
-				println project.file("${outputDir}/${docFileBase}.html")
+				println project.file("${outputDir}/${docType}/${docFileBase}.html")
 				def generateCmdLine = [
 					'pandoc',
 					'--write=html5',
@@ -63,9 +58,9 @@ class GenerateDocsHTML extends DefaultTask {
 					generateCmdLine.add("--variable=${myVar.key}:${myVar.value}")
 				}
 				generateCmdLine.addAll( [
-							'--output=' + project.file("${outputDir}/${docFileBase}.html"),
-							"${docFile}"
-						])
+					'--output=' + project.file("${outputDir}/${docType}/${docFileBase}.html"),
+					"${docFile}"
+				])
 				project.exec({
 					commandLine = generateCmdLine
 					workingDir = tmpFolder
@@ -75,6 +70,10 @@ class GenerateDocsHTML extends DefaultTask {
 		}
 		LOGGER.info('Copying resources(pic, scripts, styles) files into distribution site')
 		// Copy over resources needed for the HTML docs
+		copyGeneratedAndCompiledResources()
+	}
+
+	private copyGeneratedAndCompiledResources() {
 		project.copy {
 			from(tmpFolder) {
 				include 'images/**'
@@ -83,9 +82,17 @@ class GenerateDocsHTML extends DefaultTask {
 			}
 			into outputDir
 		}
+		for (String docType in docTypeNames) {
+			project.copy {
+				from(new File(tmpFolder, docType)) {
+					include 'images/**'
+					include 'scripts/**'
+					include 'styles/**'
+				}
+				into new File(outputDir, docType)
+			}
+		}
 	}
-
-
 }
 
 

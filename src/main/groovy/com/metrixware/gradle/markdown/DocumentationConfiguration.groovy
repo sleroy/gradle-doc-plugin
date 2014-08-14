@@ -15,10 +15,6 @@
  */
 package com.metrixware.gradle.markdown
 
-import groovy.lang.Closure
-
-import java.util.HashMap
-import java.util.Map
 
 class DocumentationConfiguration {
 	// Folder location
