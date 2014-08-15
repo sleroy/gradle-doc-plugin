@@ -29,7 +29,7 @@ class MarkdownPlugin implements Plugin<Project> {
 
 	void apply(Project project) {
 		project.extensions.create('documentation', DocumentationConfiguration)
-		
+
 		project.task('checkTools',
 		type: MarkdownToolCheckingTask,
 		group: DOCUMENTATION,
@@ -82,8 +82,6 @@ class MarkdownPlugin implements Plugin<Project> {
 		],
 		group: DOCUMENTATION,
 		description: 'Generate HTML, E-book and PDF documents from markdown docs')
-
-
 	}
 }
 

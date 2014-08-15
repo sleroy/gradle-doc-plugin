@@ -15,6 +15,7 @@
  */
 package com.metrixware.gradle.markdown
 
+import org.apache.commons.io.FileUtils
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import org.slf4j.Logger
@@ -52,14 +53,14 @@ class InitDocProjectTask extends DefaultTask {
 			LOGGER.error("Could not create the folder $folderTmp")
 		}
 		for (String key : project.documentation.conversions.keySet()) {
-			def docTempl = project.file(docFolder.path +'/' + key)
+			def docTempl = project.file(new File(docFolder, key))
 			if (!docTempl.exists() && !docTempl.mkdirs()) {
 				LOGGER.error("Could not create the folder $docTempl")
 			}
 			project.file(docFolder.path +'/' + key +'/' + project.documentation.folder_styles).mkdirs()
 			project.file(docFolder.path +'/' + key +'/' + project.documentation.folder_scripts).mkdirs()
 			project.file(docFolder.path +'/' + key +'/images').mkdirs()
-			
+			project.file(docFolder.path +'/' + key +'/doc').mkdirs()
 		}
 	}
 }

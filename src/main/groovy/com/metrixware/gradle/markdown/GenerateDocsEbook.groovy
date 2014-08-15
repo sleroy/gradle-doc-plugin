@@ -15,9 +15,6 @@
  */
 package com.metrixware.gradle.markdown
 
-import static com.metrixware.gradle.markdown.Utils.*
-
-import org.gradle.api.DefaultTask
 import org.gradle.api.GradleScriptException
 import org.gradle.api.tasks.TaskAction
 
@@ -33,10 +30,6 @@ class GenerateDocsEbook extends DocumentationTask {
 	 */
 	@TaskAction
 	void runTask() {
-		def docTypes = indexDocsPerType(project)
-		def outputDirDoc = project.file(project.buildDir.path + '/' +  project.documentation.folder_outputdoc)
-		def tmpFolder = project.file(project.documentation.folder_tmp)
-		def tmpTemplatesFolder = project.file(project.documentation.folder_tmp + '/templates')
 		// Currently only limited to tutorials
 		project.fileTree(tmpFolder) { include '**/*.md' }.each { docFile ->
 			def docFileBase = fileBaseName(docFile)
@@ -55,7 +48,7 @@ class GenerateDocsEbook extends DocumentationTask {
 						'--toc-depth=4',
 						'--section-divs',
 						'--smart',
-						'--output=' + project.file("${outputDirDoc}/${docType}/${docFileBase}.epub"),
+						'--output=' + project.file("${outputDir}/${docType}/doc/${docFileBase}.epub"),
 						"${docFile}"
 					]
 					workingDir = tmpFolder

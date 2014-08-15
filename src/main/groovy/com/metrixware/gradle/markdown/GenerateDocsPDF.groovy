@@ -15,12 +15,7 @@
  */
 package com.metrixware.gradle.markdown
 
-import static com.metrixware.gradle.markdown.Utils.*
-
-import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 /**
  * Generates the documentation in pdf format
  * @author sleroy
@@ -33,7 +28,7 @@ class GenerateDocsPDF extends DocumentationTask {
 	 */
 	@TaskAction
 	void runTask() {
-	
+
 
 		//		// Copy over the HTML documents into a directory from which we can host them
 		//		// using the Jetty server
@@ -79,7 +74,7 @@ class GenerateDocsPDF extends DocumentationTask {
 						'--header-font-name',
 						"'${project.documentation.headerFont}'",
 						"${outputDir}/${docFile.name}",
-						project.file("${outputDirDoc}/${docType}/${docFileBase}.pdf")
+						project.file("${outputDir}/${docType}/doc/${docFileBase}.pdf")
 					]
 					workingDir = tmpFolder
 				}

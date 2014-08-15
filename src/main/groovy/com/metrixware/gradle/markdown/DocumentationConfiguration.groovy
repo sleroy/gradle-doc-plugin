@@ -15,6 +15,10 @@
  */
 package com.metrixware.gradle.markdown
 
+import groovy.lang.Closure
+
+import java.util.Map
+
 
 class DocumentationConfiguration {
 	// Folder location
@@ -24,7 +28,6 @@ class DocumentationConfiguration {
 	def folder_styles = 'styles'
 	def folder_templates = 'templates'
 	def folder_output = 'site'
-	def folder_outputdoc = 'site/doc'
 	def folder_tmp = 'tmp'
 	// Templates required to generate the doc and conversion format supported
 	def conversions = [

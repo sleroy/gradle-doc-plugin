@@ -15,10 +15,6 @@
  */
 package com.metrixware.gradle.markdown
 
-import static com.metrixware.gradle.markdown.Utils.*
-
-import java.text.SimpleDateFormat
-
 import nz.net.ultraq.lesscss.LessCSSCompiler
 
 import org.apache.commons.io.FileUtils
@@ -53,7 +49,7 @@ class CopyResourcesTask extends DocumentationTask {
 
 		LOGGER.info('Copying global LESS ...')
 		LessCSSCompiler compiler = new LessCSSCompiler()
-		project.fileTree(stylesFolder) { include LESS_EXTENSION}.each { lessFile ->
+		project.fileTree(stylesFolder) { include LESS_EXTENSION }.each { lessFile ->
 			def lessFileBase = fileBaseName(lessFile)
 			compiler.compile(lessFile, project.file("${tmpFolder.path}/styles/${lessFileBase}.css"))
 		}
@@ -63,8 +59,9 @@ class CopyResourcesTask extends DocumentationTask {
 		LOGGER.info('Copy all md resources into a same folder')
 		// Copy all .md files into the same directory
 		docTypeNames.each { docTypeName ->
-			def mdOutputDir = new File(tmpFolder+ '/' + docTypeName+'/')
-			project.fileTree(docFolder + '/' + docTypeName) { include '**/*.md' }.each { docFile ->
+			def mdOutputDir = FileUtils.getFile(tmpFolder,docTypeName)
+			mdOutputDir.mkdirs()
+			project.fileTree(FileUtils.getFile(docFolder ,docTypeName)) { include '**/*.md' }.each { docFile ->
 				project.copy {
 					from(docFile) {
 						filter(ReplaceTokens, tokens: magicVariablesMap)
@@ -82,22 +79,22 @@ class CopyResourcesTask extends DocumentationTask {
 
 		docTypeNames.each { docTypeName ->
 			def imagesDir = project.file("${docFolder}/${docTypeName}/images")
-			def imageOutputDir = new File(tmpFolder+ '/' + docTypeName+'/images')
-			local.mkdirs()
+			def imageOutputDir = FileUtils.getFile(tmpFolder, docTypeName, 'images')
+			imageOutputDir.mkdirs()
 			project.copy {
 				from imagesDir
 				into imageOutputDir
 			}
 			def cssDir = project.file("${docFolder}/${docTypeName}/css")
-			def cssOutputDir = new File(tmpFolder+ '/' + docTypeName+'/css')
-			local.mkdirs()
+			def cssOutputDir = FileUtils.getFile(tmpFolder, docTypeName, 'css')
+			cssOutputDir.mkdirs()
 			project.copy {
 				from cssDir
 				into cssOutputDir
 			}
 			def scriptDir= project.file("${docFolder}/${docTypeName}/scripts")
-			def scriptOutputDir = new File(tmpFolder+ '/' + docTypeName+'/scripts')
-			local.mkdirs()
+			def scriptOutputDir = FileUtils.getFile(tmpFolder, docTypeName, 'scripts')
+			scriptOutputDir.mkdirs()
 			project.copy {
 				from scriptDir
 				into scriptOutputDir
@@ -154,7 +151,6 @@ class CopyResourcesTask extends DocumentationTask {
 		LOGGER.debug('Creating output directory')
 		outputDir.mkdirs()
 		LOGGER.debug('Creating output documentation directory')
-		outputDirDoc.mkdirs()
 
 		docTypeNames.each { docTypeName ->
 			new File(outputDir, docTypeName).mkdirs()

@@ -15,9 +15,7 @@
  */
 package com.metrixware.gradle.markdown
 
-import org.gradle.api.DefaultTask
 import org.gradle.api.GradleScriptException
-import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

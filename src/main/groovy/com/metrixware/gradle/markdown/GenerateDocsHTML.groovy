@@ -15,9 +15,6 @@
  */
 package com.metrixware.gradle.markdown
 
-import static com.metrixware.gradle.markdown.Utils.*
-
-import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -39,7 +36,7 @@ class GenerateDocsHTML extends DocumentationTask {
 
 		project.fileTree(tmpFolder) { include '**/*.md' }.each { docFile ->
 			def docFileBase = fileBaseName(docFile)
-			def docType     = docTypeNames.get(docFileBase)
+			def docType     = docTypes.get(docFileBase)
 
 			if (project.documentation.conversions[docType].contains('html')) {
 				println 'Generating HTML doc for ${docFileBase}...'
