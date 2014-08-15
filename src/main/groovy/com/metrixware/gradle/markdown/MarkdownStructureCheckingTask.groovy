@@ -32,10 +32,6 @@ class MarkdownStructureCheckingTask extends DocumentationTask {
 		if (project.documentation == null) {
 			throw new GradleScriptException('Missing extension documentation')
 		}
-		def docFolder = project.file(project.documentation.folder_docs)
-		def scriptsFolder = project.file(project.documentation.folder_scripts)
-		def stylesFolder = project.file(project.documentation.folder_styles)
-		def templatesFolder = project.file(project.documentation.folder_templates)
 		//def outputSiteFolder = project.file(FolderConstants.OUTPUTSITE_FOLDER)
 		def cond = true
 		cond &= this.checkExisting('Documentation folder', docFolder)
@@ -57,8 +53,8 @@ class MarkdownStructureCheckingTask extends DocumentationTask {
 		}
 
 
-	}
 
+	}
 
 
 	def checkExisting(folderName, folder) {

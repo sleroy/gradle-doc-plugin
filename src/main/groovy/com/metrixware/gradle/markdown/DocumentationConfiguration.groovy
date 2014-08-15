@@ -21,14 +21,6 @@ import java.util.Map
 
 
 class DocumentationConfiguration {
-	// Folder location
-	def folder_docs ='docs'
-	def folder_scripts = 'scripts'
-	def folder_images = 'images'
-	def folder_styles = 'styles'
-	def folder_templates = 'templates'
-	def folder_output = 'site'
-	def folder_tmp = 'tmp'
 	// Templates required to generate the doc and conversion format supported
 	def conversions = [
 		articles:  ['html', 'pdf'],

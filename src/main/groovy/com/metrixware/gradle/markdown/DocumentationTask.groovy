@@ -6,14 +6,22 @@ import org.gradle.api.DefaultTask
 
 class DocumentationTask extends DefaultTask {
 
-	def scriptsFolder = project.file(project.documentation.folder_scripts)
-	def imagesFolder = project.file(project.documentation.folder_images)
-	def stylesFolder = project.file(project.documentation.folder_styles)
-	def templatesFolder = project.file(project.documentation.folder_templates)
-	def outputDir = project.file(new File(project.buildDir,project.documentation.folder_output))
-	def tmpFolder = project.file(project.documentation.folder_tmp)
-	def tmpTemplatesFolder = project.file(new File(project.documentation.folder_tmp , 'templates'))
-	// Preprocess the template files to insert the correct document date and project version
+	static final String DOCS = 'docs'
+
+
+	def FOLDER_SCRIPTS = 'scripts'
+	def FOLDER_IMAGES= 'images'
+	def FOLDER_STYLES = 'styles'
+
+
+	def docFolder = project.file(DOCS)
+	def scriptsFolder = project.file('scripts')
+	def imagesFolder = project.file('images')
+	def stylesFolder = project.file('styles')
+	def templatesFolder = project.file('templates')
+	def outputDir = project.file(new File(project.buildDir,'site'))
+	def tmpFolder = project.file('tmp')
+	def tmpTemplatesFolder = project.file(new File('tmp' , 'templates'))
 	def docTypeNames = getTemplates(project)
 	def magicVariablesMap = preparingMagicVariables()
 	def docTypes = indexDocsPerType(project)
@@ -40,7 +48,7 @@ class DocumentationTask extends DefaultTask {
 
 	static getTemplates(project) {
 		def docTypeNames    = [] as Set
-		def docFolder = project.file(project.documentation.folder_docs)
+		def docFolder = project.file(DOCS)
 		project.fileTree(docFolder) { include '**/*.md' }.each { docFile ->
 			docTypeNames.add(docFile.parentFile.name)
 		}
@@ -49,7 +57,7 @@ class DocumentationTask extends DefaultTask {
 
 	static indexDocsPerType(project) {
 		def docTypes        = [:]
-		def docFolder = project.file(project.documentation.folder_docs)
+		def docFolder = project.file(DOCS)
 		project.fileTree(docFolder) { include '**/*.md' }.each { docFile ->
 			docTypes.put(fileBaseName(docFile), docFile.parentFile.name)
 		}

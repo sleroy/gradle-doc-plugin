@@ -26,41 +26,30 @@ class InitDocProjectTask extends DefaultTask {
 
 	@TaskAction
 	void runTask() {
-		def docFolder = project.file(project.documentation.folder_docs)
-		def scriptsFolder = project.file(project.documentation.folder_scripts)
-		def stylesFolder = project.file(project.documentation.folder_styles)
-		def templatesFolder = project.file(project.documentation.folder_templates)
-		def folderTmp = project.file(project.documentation.folder_tmp)
 
-		LOGGER.info('Creating documentation folder...')
-		if (!docFolder.exists() && !docFolder.mkdirs()) {
-			LOGGER.error("Could not create the folder $docFolder")
+		def toCreateMainFolders = [
+			'images',
+			'scripts',
+			'styles',
+			'docs',
+			'tmp',
+			'templates'
+		]
+		LOGGER.info('Creation of folders')
+		for (String folderName in toCreateMainFolders) {
+			project.file(folderName).mkdirs()
 		}
-		LOGGER.info('Creating scripts folder...')
-		if (!scriptsFolder.exists() && !scriptsFolder.mkdirs()) {
-			LOGGER.error("Could not create the folder $scriptsFolder")
-		}
-		LOGGER.info('Creating styles folder...')
-		if (!stylesFolder.exists() && !stylesFolder.mkdirs()) {
-			LOGGER.error("Could not create the folder $stylesFolder")
-		}
-		LOGGER.info('Creating templates folder...')
-		if (!templatesFolder.exists() && !templatesFolder.mkdirs()) {
-			LOGGER.error("Could not create the folder $templatesFolder")
-		}
-		LOGGER.info('Creating temporary folder...')
-		if (!folderTmp.exists() && !folderTmp.mkdirs()) {
-			LOGGER.error("Could not create the folder $folderTmp")
-		}
+		def toCreatePerTemplateFolders = [
+			'images',
+			'scripts',
+			'styles',
+			'doc',
+		]
+
 		for (String key : project.documentation.conversions.keySet()) {
-			def docTempl = project.file(new File(docFolder, key))
-			if (!docTempl.exists() && !docTempl.mkdirs()) {
-				LOGGER.error("Could not create the folder $docTempl")
+			for (String toCreateFolder in toCreatePerTemplateFolders) {
+				project.file('docs/' + key +'/' + toCreateFolder).mkdirs()
 			}
-			project.file(docFolder.path +'/' + key +'/' + project.documentation.folder_styles).mkdirs()
-			project.file(docFolder.path +'/' + key +'/' + project.documentation.folder_scripts).mkdirs()
-			project.file(docFolder.path +'/' + key +'/images').mkdirs()
-			project.file(docFolder.path +'/' + key +'/doc').mkdirs()
 		}
 	}
 }

@@ -39,7 +39,7 @@ class GenerateDocsHTML extends DocumentationTask {
 			def docType     = docTypes.get(docFileBase)
 
 			if (project.documentation.conversions[docType].contains('html')) {
-				println 'Generating HTML doc for ${docFileBase}...'
+				println "Generating HTML doc for ${docFileBase}..."
 				println project.file("${outputDir}/${docType}/${docFileBase}.html")
 				def generateCmdLine = [
 					'pandoc',

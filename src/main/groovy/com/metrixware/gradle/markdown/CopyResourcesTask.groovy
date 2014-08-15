@@ -31,19 +31,19 @@ class CopyResourcesTask extends DocumentationTask {
 	void copyGlobalResources() {
 		LOGGER.info('Copying global pictures...')
 		project.copy {
-			from project.file(project.documentation.folder_images)
-			into "${tmpFolder.path}/${imagesFolder.name}"
+			from imagesFolder
+			into "${tmpFolder.path}/images"
 		}
 
 		LOGGER.info('Copying global JS scripts...')
 		project.copy {
-			from project.file(project.documentation.folder_scripts)
-			into "${tmpFolder.path}/${scriptsFolder.name}"
+			from scriptsFolder
+			into "${tmpFolder.path}/scripts"
 		}
 
 		LOGGER.info('Copying global CSS ...')
 		project.copy {
-			from(stylesFolder) { exclude LESS_EXTENSION }
+			from stylesFolder
 			into "${tmpFolder.path}/styles"
 		}
 
@@ -154,7 +154,10 @@ class CopyResourcesTask extends DocumentationTask {
 
 		docTypeNames.each { docTypeName ->
 			new File(outputDir, docTypeName).mkdirs()
-			new File(outputDirDoc, docTypeName).mkdirs()
+			project.file(outputDir.path +'/' + docTypeName +'/' + project.documentation.folder_styles).mkdirs()
+			project.file(outputDir.path +'/' + docTypeName +'/' + project.documentation.folder_scripts).mkdirs()
+			project.file(outputDir.path +'/' + docTypeName +'/images').mkdirs()
+			project.file(outputDir.path +'/' + docTypeName +'/doc').mkdirs()
 		}
 	}
 
