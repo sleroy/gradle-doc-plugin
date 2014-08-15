@@ -50,6 +50,7 @@ class MarkdownPlugin implements Plugin<Project> {
 		type: CopyResourcesTask,
 		group: DOCUMENTATION,
 		dependsOn: [
+			'initDocProject',
 			'checkStructure',
 			'checkTools'
 		],

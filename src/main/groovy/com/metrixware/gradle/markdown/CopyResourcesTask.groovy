@@ -152,13 +152,7 @@ class CopyResourcesTask extends DocumentationTask {
 		outputDir.mkdirs()
 		LOGGER.debug('Creating output documentation directory')
 
-		docTypeNames.each { docTypeName ->
-			new File(outputDir, docTypeName).mkdirs()
-			project.file(outputDir.path +'/' + docTypeName +'/' + project.documentation.folder_styles).mkdirs()
-			project.file(outputDir.path +'/' + docTypeName +'/' + project.documentation.folder_scripts).mkdirs()
-			project.file(outputDir.path +'/' + docTypeName +'/images').mkdirs()
-			project.file(outputDir.path +'/' + docTypeName +'/doc').mkdirs()
-		}
+
 	}
 
 
