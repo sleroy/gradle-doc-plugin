@@ -46,7 +46,7 @@ class GenerateDocsHTML extends DocumentationTask {
 					'--write=html5',
 					'--template=' + project.file("${tmpTemplatesFolder}/${docType}.html"),
 					'--toc',
-					'--toc-depth=4',
+					'--toc-depth=2',
 					'--section-divs',
 					'--no-highlight',
 					'--smart'

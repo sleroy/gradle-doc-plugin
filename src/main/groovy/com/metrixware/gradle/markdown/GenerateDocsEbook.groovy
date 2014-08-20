@@ -37,7 +37,7 @@ class GenerateDocsEbook extends DocumentationTask {
 			if (project.documentation.conversions[docType] == null) {
 				throw new GradleScriptException("Markdown files found outside the docs folder, please verify $docFile", null)
 			}
-			if (project.documentation.conversions[docType].contains('ebook') == null) {
+			if (project.documentation.conversions[docType].contains('ebook')) {
 				println "Generating E-books for ${docFileBase}..."
 				project.exec{
 					commandLine=[
@@ -45,7 +45,7 @@ class GenerateDocsEbook extends DocumentationTask {
 						'--write=epub',
 						'--template=' + project.file("${tmpTemplatesFolder}/${docType}.epub"),
 						'--toc',
-						'--toc-depth=4',
+						'--toc-depth=3',
 						'--section-divs',
 						'--smart',
 						'--output=' + project.file("${outputDir}/${docType}/doc/${docFileBase}.epub"),

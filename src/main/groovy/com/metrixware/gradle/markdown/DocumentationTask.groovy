@@ -23,18 +23,9 @@ class DocumentationTask extends DefaultTask {
 	def tmpFolder = project.file('tmp')
 	def tmpTemplatesFolder = project.file(new File('tmp' , 'templates'))
 	def docTypeNames = getTemplates(project)
-	def magicVariablesMap = preparingMagicVariables()
+	
 	def docTypes = indexDocsPerType(project)
 
-	private Properties preparingMagicVariables() {
-		def documentVersion = new SimpleDateFormat('yyyyMMdd - dd MMMM yyyy', Locale.ENGLISH).format(new Date())
-		def magicVariablesMap = new Properties()
-		magicVariablesMap['documentVersion']=  documentVersion.toString()
-		magicVariablesMap['date']=  new Date().toString()
-		magicVariablesMap['projectVersion']=  project.version.toString()
-		magicVariablesMap.putAll(project.documentation.templateVariables)
-		return magicVariablesMap
-	}
 
 	/**
 	 * Get just the name of the file minus the path and extension.

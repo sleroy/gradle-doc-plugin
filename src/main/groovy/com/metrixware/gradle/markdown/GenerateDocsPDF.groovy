@@ -15,6 +15,7 @@
  */
 package com.metrixware.gradle.markdown
 
+import org.gradle.api.GradleScriptException
 import org.gradle.api.tasks.TaskAction
 /**
  * Generates the documentation in pdf format
@@ -47,14 +48,13 @@ class GenerateDocsPDF extends DocumentationTask {
 					flags:   'gis'
 					)
 		}
-
 		// Generate the PDF documents from the modified HTML documents
-		project.fileTree(outputDir) { include '*.html' }.each { docFile ->
+		project.fileTree(outputDir) { include '**/*.html' }.each { docFile ->
 			def docFileBase = fileBaseName(docFile)
-			def docType     = docTypeNames.get(docFileBase)
-
-			if (project.documentation.conversions[docType].contains('pdf')) {
-				println "Generating PDF doc for ${docFileBase}..."
+			def docType     = docTypes.get(docFileBase)
+			
+			if (project.documentation.conversions[docType] != null && project.documentation.conversions[docType].contains('pdf')) {
+				println "Generating PDF doc for ${docFile}..."
 				project.exec{
 					commandLine = [
 						'wkhtmltopdf',
@@ -70,10 +70,10 @@ class GenerateDocsPDF extends DocumentationTask {
 						'--footer-font-name',
 						"'${project.documentation.footerFont}'",
 						'--footer-right',
-						"${project.documentation.footerRightText}",
+						"'${project.documentation.footerRightText}'",
 						'--header-font-name',
 						"'${project.documentation.headerFont}'",
-						"${outputDir}/${docFile.name}",
+						"${docFile.path}",
 						project.file("${outputDir}/${docType}/doc/${docFileBase}.pdf")
 					]
 					workingDir = tmpFolder

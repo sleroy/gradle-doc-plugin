@@ -42,8 +42,7 @@ class InitDocProjectTask extends DefaultTask {
 		def toCreatePerTemplateFolders = [
 			'images',
 			'scripts',
-			'styles',
-			'doc',
+			'styles'
 		]
 
 		for (String key : project.documentation.conversions.keySet()) {

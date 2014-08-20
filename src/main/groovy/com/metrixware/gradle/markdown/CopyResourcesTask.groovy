@@ -15,6 +15,8 @@
  */
 package com.metrixware.gradle.markdown
 
+import java.text.SimpleDateFormat
+
 import nz.net.ultraq.lesscss.LessCSSCompiler
 
 import org.apache.commons.io.FileUtils
@@ -57,6 +59,7 @@ class CopyResourcesTask extends DocumentationTask {
 
 	void copyMarkdownFiles() {
 		LOGGER.info('Copy all md resources into a same folder')
+		def magicVariablesMap = preparingMagicVariables()
 		// Copy all .md files into the same directory
 		docTypeNames.each { docTypeName ->
 			def mdOutputDir = FileUtils.getFile(tmpFolder,docTypeName)
@@ -101,6 +104,28 @@ class CopyResourcesTask extends DocumentationTask {
 			}
 		}
 
+		for (String toCreateFolder in [
+			'images',
+			'scripts',
+			'styles'
+		]) {
+			project.file(outputDir.path +'/' + toCreateFolder).mkdirs()
+		}
+
+
+
+		for (String key : project.documentation.conversions.keySet()) {
+			for (String toCreateFolder in [
+				'images',
+				'scripts',
+				'styles',
+				'doc',
+			]) {
+				project.file(outputDir.path +'/' + key +'/' + toCreateFolder).mkdirs()
+			}
+
+		}
+
 
 	}
 
@@ -132,7 +157,7 @@ class CopyResourcesTask extends DocumentationTask {
 
 
 		LOGGER.info('Preprocessing templates...')
-
+		def magicVariablesMap = preparingMagicVariables()
 		project.copy {
 			from(templatesFolder) {
 				filter(ReplaceTokens, tokens: magicVariablesMap)
@@ -155,5 +180,14 @@ class CopyResourcesTask extends DocumentationTask {
 
 	}
 
+	private Properties preparingMagicVariables() {
+		def documentVersion = new SimpleDateFormat('yyyyMMdd - dd MMMM yyyy', Locale.ENGLISH).format(new Date())
+		def magicVariablesMap = new Properties()
+		magicVariablesMap['documentVersion']=  documentVersion.toString()
+		magicVariablesMap['date']=  new Date().toString()
+		magicVariablesMap['projectVersion']=  project.version.toString()
+		magicVariablesMap.putAll(project.documentation.templateVariables)
+		return magicVariablesMap
+	}
 
 }
