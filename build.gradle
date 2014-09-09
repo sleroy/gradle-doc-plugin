@@ -89,3 +89,21 @@ task sourceJar(type: Jar) {
 }
 
 artifacts { sourceJar }
+
+
+
+// publish the bundle archive on nexus
+publishing {
+
+    repositories {
+        maven {
+            url "http://zeus:8080/nexus/content/repositories/releases"
+	    credentials{
+		username mavenUser 
+		password mavenPassword
+	    }
+        }
+    }
+}
+
+

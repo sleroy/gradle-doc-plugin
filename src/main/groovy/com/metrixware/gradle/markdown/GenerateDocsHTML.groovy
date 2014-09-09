@@ -42,7 +42,7 @@ class GenerateDocsHTML extends DocumentationTask {
 				println "Generating HTML doc for ${docFileBase}..."
 				println project.file("${outputDir}/${docType}/${docFileBase}.html")
 				def generateCmdLine = [
-					'pandoc',
+					project.documentation.panDocBin,
 					'--write=html5',
 					'--template=' + project.file("${tmpTemplatesFolder}/${docType}.html"),
 					'--toc',

@@ -41,7 +41,7 @@ class GenerateDocsEbook extends DocumentationTask {
 				println "Generating E-books for ${docFileBase}..."
 				project.exec{
 					commandLine=[
-						'pandoc',
+						project.documentation.panDocBin,
 						'--write=epub',
 						'--template=' + project.file("${tmpTemplatesFolder}/${docType}.epub"),
 						'--toc',
@@ -55,7 +55,7 @@ class GenerateDocsEbook extends DocumentationTask {
 				}
 				project.exec{
 					commandLine=[
-						'ebook-convert',
+						project.documentation.ebookConvertBin,
 						project.file("${outputDirDoc}/${docType}/${docFileBase}.epub"),
 						project.file("${outputDirDoc}/${docType}/${docFileBase}.mobi")
 					]}

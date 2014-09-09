@@ -52,12 +52,12 @@ class GenerateDocsPDF extends DocumentationTask {
 		project.fileTree(outputDir) { include '**/*.html' }.each { docFile ->
 			def docFileBase = fileBaseName(docFile)
 			def docType     = docTypes.get(docFileBase)
-			
+
 			if (project.documentation.conversions[docType] != null && project.documentation.conversions[docType].contains('pdf')) {
 				println "Generating PDF doc for ${docFile}..."
 				project.exec{
 					commandLine = [
-						'wkhtmltopdf',
+						project.documentation.wkhtmltopdfBin,
 						'--print-media-type',
 						'--dpi',
 						"${project.documentation.pdfDpi}",

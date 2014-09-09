@@ -23,8 +23,9 @@ class DocumentationTask extends DefaultTask {
 	def tmpFolder = project.file('tmp')
 	def tmpTemplatesFolder = project.file(new File('tmp' , 'templates'))
 	def docTypeNames = getTemplates(project)
-	
+
 	def docTypes = indexDocsPerType(project)
+
 
 
 	/**
