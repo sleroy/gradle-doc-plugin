@@ -22,7 +22,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 class InitDocProjectTask extends DefaultTask {
-	private static final Logger LOGGER = LoggerFactory.getLogger('markdown-init')
+	private static final Logger LOGGER = LoggerFactory.getLogger('pandoc-init')
 
 	@TaskAction
 	void runTask() {

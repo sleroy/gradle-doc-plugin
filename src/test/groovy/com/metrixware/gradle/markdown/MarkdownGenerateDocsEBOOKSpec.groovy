@@ -33,7 +33,7 @@ class MarkdownGenerateDocsEBOOKSpec extends Specification {
 		project.tasks.findByName('generateDocsEbook') == null
 
 		when:
-		project.apply plugin: MarkdownPlugin
+		project.apply plugin: PandocPlugin
 		project.tasks.findByName('initDocProject').runTask()
 		project.tasks.findByName('checkStructure').runTask()
 		project.tasks.findByName('checkTools').runTask()

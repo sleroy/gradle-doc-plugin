@@ -22,12 +22,19 @@ class DocumentationTask extends DefaultTask {
 	def outputDir = project.file(new File(project.buildDir,'site'))
 	def tmpFolder = project.file('tmp')
 	def tmpTemplatesFolder = project.file(new File('tmp' , 'templates'))
-	def docTypeNames = getTemplates(project)
+//	def docTypeNames = getTemplates(project)
+//
+//	def docTypes = indexDocsPerType(project)
 
-	def docTypes = indexDocsPerType(project)
 
 
-
+	def getDocTypeNames(){
+		return  getTemplates(project)
+	}
+	
+	def getDocTypes(){
+		return  indexDocsPerType(project)
+	}
 	/**
 	 * Get just the name of the file minus the path and extension.
 	 *
@@ -40,17 +47,14 @@ class DocumentationTask extends DefaultTask {
 
 	static getTemplates(project) {
 		def docTypeNames    = [] as Set
-		def docFolder = project.file(DOCS)
-		project.fileTree(docFolder) { include '**/*.md' }.each { docFile ->
-			docTypeNames.add(docFile.parentFile.name)
-		}
+		docTypeNames.addAll(project.file(DOCS).listFiles().findAll({File e -> e.isDirectory()})*.name)
 		return docTypeNames
 	}
 
 	static indexDocsPerType(project) {
 		def docTypes        = [:]
 		def docFolder = project.file(DOCS)
-		project.fileTree(docFolder) { include '**/*.md' }.each { docFile ->
+		project.fileTree(docFolder) { includes: ['**/*.md','**/*.tex'] }.each { docFile ->
 			docTypes.put(fileBaseName(docFile), docFile.parentFile.name)
 		}
 		return docTypes

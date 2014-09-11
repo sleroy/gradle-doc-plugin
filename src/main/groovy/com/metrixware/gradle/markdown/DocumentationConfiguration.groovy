@@ -28,6 +28,7 @@ class DocumentationConfiguration {
 	def velocityFileFilter = '**/*.md'
 	// Binaries
 	def panDocBin = 'pandoc'
+	def pdfTexBin ='pdflatex'
 	def ebookConvertBin = 'ebook-convert'
 	def wkhtmltopdfBin = 'wkhtmltopdf'
 

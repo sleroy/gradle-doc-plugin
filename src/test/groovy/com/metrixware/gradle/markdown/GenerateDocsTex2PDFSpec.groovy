@@ -22,29 +22,26 @@ import org.gradle.testfixtures.ProjectBuilder
 
 import spock.lang.Specification
 
-class MarkdownGenerateDocsHTMLSpec extends Specification {
+class GenerateDocsTex2PDFSpec extends Specification {
 
 
 
-	def "Generates HTML Documentation"() {
+	def "Generates PDF Documentation from TeX"() {
 		def Project project = ProjectBuilder.builder().build()
-	
-		expect:
-		project.tasks.findByName('generateDocsHTML') == null
 
 		when:
 		project.apply plugin: PandocPlugin
 		project.tasks.findByName('initDocProject').runTask()
 		project.tasks.findByName('checkStructure').runTask()
-		//project.tasks.findByName('checkTools').runTask()
 		
 		project.file('docs/articles/').mkdirs();
 		File fromFolder = new File('src/test/resources/fakeDoc/');
 		FileUtils.copyDirectory(fromFolder, project.rootDir)
 		
+	
 		project.tasks.findByName('copyResources').runTask()
 	
-		Task markdownToHtmlTask = project.tasks.findByName('generateDocsHTML')
+		Task markdownToHtmlTask = project.tasks.findByName('generateDocsTex2PDF')
 		markdownToHtmlTask.runTask()
 
 		then:

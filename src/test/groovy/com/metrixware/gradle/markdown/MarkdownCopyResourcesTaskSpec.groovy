@@ -32,7 +32,7 @@ class MarkdownCopyResourcesTaskSpec extends Specification {
 		project.tasks.findByName('checkStructure') == null
 
 		when:
-		project.apply plugin: MarkdownPlugin
+		project.apply plugin: PandocPlugin
 		project.tasks.findByName('initDocProject').runTask()
 
 		Task markdownToHtmlTask = project.tasks.findByName('copyResources')

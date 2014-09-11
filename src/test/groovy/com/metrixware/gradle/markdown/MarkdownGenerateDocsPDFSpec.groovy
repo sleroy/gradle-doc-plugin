@@ -33,7 +33,7 @@ class MarkdownGenerateDocsPDFSpec extends Specification {
 		project.tasks.findByName('generateDocsPDF') == null
 
 		when:
-		project.apply plugin: MarkdownPlugin
+		project.apply plugin: PandocPlugin
 		project.tasks.findByName('initDocProject').runTask()
 		project.tasks.findByName('checkStructure').runTask()
 		project.tasks.findByName('checkTools').runTask()

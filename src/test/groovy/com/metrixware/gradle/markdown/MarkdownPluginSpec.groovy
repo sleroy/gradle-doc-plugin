@@ -34,7 +34,7 @@ class MarkdownPluginSpec extends Specification {
 		project.tasks.findByName('checkTools') == null
 
 		when:
-		project.apply plugin: MarkdownPlugin
+		project.apply plugin: PandocPlugin
 
 		then:
 		Task checkStruct = project.tasks.findByName('checkStructure')

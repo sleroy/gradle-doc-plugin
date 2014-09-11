@@ -58,13 +58,20 @@ class CopyResourcesTask extends DocumentationTask {
 	}
 
 	void copyMarkdownFiles() {
-		LOGGER.info('Copy all md resources into a same folder')
+		LOGGER.info('Copy all md/tex resources into a same folder')
 		def magicVariablesMap = preparingMagicVariables()
 		// Copy all .md files into the same directory
 		docTypeNames.each { docTypeName ->
 			def mdOutputDir = FileUtils.getFile(tmpFolder,docTypeName)
 			mdOutputDir.mkdirs()
-			project.fileTree(FileUtils.getFile(docFolder ,docTypeName)) { include '**/*.md' }.each { docFile ->
+			def docDir = FileUtils.getFile(docFolder ,docTypeName)
+			project.fileTree(docDir).each { docFile ->
+				project.copy {
+					from(docFile)
+					into mdOutputDir
+				}
+			}
+			project.fileTree(docDir) { includes: ['**/*.tex','**/*.md'] }.each { docFile ->
 				project.copy {
 					from(docFile) {
 						filter(ReplaceTokens, tokens: magicVariablesMap)
@@ -82,6 +89,7 @@ class CopyResourcesTask extends DocumentationTask {
 
 		docTypeNames.each { docTypeName ->
 			def imagesDir = project.file("${docFolder}/${docTypeName}/images")
+
 			def imageOutputDir = FileUtils.getFile(tmpFolder, docTypeName, 'images')
 			imageOutputDir.mkdirs()
 			project.copy {

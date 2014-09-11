@@ -24,7 +24,7 @@ import org.gradle.api.Project
 /**
  * @author Sylvain Leroy
  */
-class MarkdownPlugin implements Plugin<Project> {
+class PandocPlugin implements Plugin<Project> {
 	private static final String DOCUMENTATION = 'Documentation'
 
 	void apply(Project project) {
@@ -51,8 +51,7 @@ class MarkdownPlugin implements Plugin<Project> {
 		group: DOCUMENTATION,
 		dependsOn: [
 			'initDocProject',
-			'checkStructure',
-			'checkTools'
+			'checkStructure'
 		],
 		description: 'Copy the documentation resources into the temporary folder to produce the documentation.')
 
@@ -60,19 +59,32 @@ class MarkdownPlugin implements Plugin<Project> {
 		project.task('generateDocsHTML',
 		type: GenerateDocsHTML,
 		group: DOCUMENTATION,
-		dependsOn: ['copyResources'],
+		dependsOn: ['checkTools','copyResources'],
 		description: 'Generates the documentation in HTML format.')
+		
+		project.task('generateDocsTex2HTML',
+		type: GenerateTex2HTML,
+		group: DOCUMENTATION,
+		dependsOn: ['copyResources'],
+		description: 'Generates the documentation in HTML format from a TeX input.')
+		
+		
+		project.task('generateDocsTex2PDF',
+		type: GenerateTex2Pdf,
+		group: DOCUMENTATION,
+		dependsOn: ['copyResources'],
+		description: 'Generates the documentation in PDF format from a TeX input.')
 
 		project.task('generateDocsEbook',
 		type: GenerateDocsEbook,
 		group: DOCUMENTATION,
-		dependsOn: ['copyResources'],
+		dependsOn: ['checkTools','copyResources'],
 		description: 'Generates the documentation in Ebook format.')
 
 		project.task('generateDocsPDF',
 		type: GenerateDocsPDF,
 		group: DOCUMENTATION,
-		dependsOn: ['copyResources'],
+		dependsOn: ['checkTools','copyResources'],
 		description: 'Generates the documentation in PDF format.')
 
 		project.task('generateDocs',

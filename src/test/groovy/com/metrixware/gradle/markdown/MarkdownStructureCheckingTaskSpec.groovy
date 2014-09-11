@@ -34,7 +34,7 @@ class MarkdownStructureCheckingTaskSpec extends Specification {
 		project.tasks.findByName('checkStructure') == null
 
 		when:
-		project.apply plugin: MarkdownPlugin
+		project.apply plugin: PandocPlugin
 		Task markdownToHtmlTask = project.tasks.findByName('checkStructure')
 		markdownToHtmlTask.runTask();
 
@@ -49,7 +49,7 @@ class MarkdownStructureCheckingTaskSpec extends Specification {
 		project.tasks.findByName('checkStructure') == null
 
 		when:
-		project.apply plugin: MarkdownPlugin
+		project.apply plugin: PandocPlugin
 		project.tasks.findByName('initDocProject').runTask();
 		
 		Task markdownToHtmlTask = project.tasks.findByName('checkStructure')
