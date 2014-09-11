@@ -18,6 +18,9 @@ package com.metrixware.gradle.markdown
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.testfixtures.ProjectBuilder
+
+import com.metrixware.gradle.pandoc.PandocPlugin;
+
 import spock.lang.Specification
 
 class MarkdownPluginSpec extends Specification {

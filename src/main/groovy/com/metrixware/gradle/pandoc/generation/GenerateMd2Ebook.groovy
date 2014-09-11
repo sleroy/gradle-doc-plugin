@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.metrixware.gradle.markdown
+package com.metrixware.gradle.pandoc.generation
 
 import org.gradle.api.GradleScriptException
 import org.gradle.api.tasks.TaskAction
+
+import com.metrixware.gradle.pandoc.DocumentationTask;
 
 /**
  * Generates the documentation in ebook format
  * @author sleroy
  *
  */
-class GenerateDocsEbook extends DocumentationTask {
+class GenerateMd2Ebook extends DocumentationTask {
 
 	/**
 	 * This task converts markdown files from tmp folder into ebooks. 

@@ -24,6 +24,8 @@ import spock.lang.Specification
 import org.gradle.api.GradleScriptException
 import org.gradle.api.tasks.TaskInstantiationException;
 
+import com.metrixware.gradle.pandoc.PandocPlugin;
+
 class MarkdownStructureCheckingTaskSpec extends Specification {
 	
 

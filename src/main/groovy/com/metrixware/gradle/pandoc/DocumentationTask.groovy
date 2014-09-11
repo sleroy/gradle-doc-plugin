@@ -1,4 +1,4 @@
-package com.metrixware.gradle.markdown
+package com.metrixware.gradle.pandoc
 
 import java.text.SimpleDateFormat
 

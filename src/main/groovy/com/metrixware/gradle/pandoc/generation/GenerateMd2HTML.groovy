@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.metrixware.gradle.markdown
+package com.metrixware.gradle.pandoc.generation
 
 import org.gradle.api.tasks.TaskAction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+
+import com.metrixware.gradle.pandoc.DocumentationTask;
 
 /**
  * Generates the documentation in html format
  * @author sleroy
  *
  */
-class GenerateDocsHTML extends DocumentationTask {
+class GenerateMd2HTML extends DocumentationTask {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger('markdown-html')
 

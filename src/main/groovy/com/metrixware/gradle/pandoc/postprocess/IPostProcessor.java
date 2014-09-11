@@ -1,4 +1,4 @@
-package com.metrixware.gradle.markdown.postprocess;
+package com.metrixware.gradle.pandoc.postprocess;
 
 import java.io.InputStream;
 import java.io.OutputStream;

@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.metrixware.gradle.markdown
+package com.metrixware.gradle.pandoc.generation
 
 import org.gradle.api.tasks.TaskAction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import com.metrixware.gradle.markdown.postprocess.Latex2HtmlReferencesPostprocessor
+import com.metrixware.gradle.pandoc.DocumentationTask
+import com.metrixware.gradle.pandoc.postprocess.Latex2HtmlReferencesPostprocessor
 
 /**
  * Generates the documentation in html format

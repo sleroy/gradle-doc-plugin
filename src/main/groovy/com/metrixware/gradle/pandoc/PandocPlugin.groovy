@@ -13,10 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.metrixware.gradle.markdown
+package com.metrixware.gradle.pandoc
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+
+import com.metrixware.gradle.pandoc.generation.GenerateHtml2PDF;
+import com.metrixware.gradle.pandoc.generation.GenerateMd2Ebook;
+import com.metrixware.gradle.pandoc.generation.GenerateMd2HTML;
+import com.metrixware.gradle.pandoc.generation.GenerateTex2HTML;
+import com.metrixware.gradle.pandoc.generation.GenerateTex2PDF;
+import com.metrixware.gradle.pandoc.project.CopyResourcesTask;
+import com.metrixware.gradle.pandoc.project.InitDocProjectTask;
+import com.metrixware.gradle.pandoc.project.MarkdownToolCheckingTask;
+import com.metrixware.gradle.pandoc.project.StructureCheckingTask;
 
 
 
@@ -36,7 +46,7 @@ class PandocPlugin implements Plugin<Project> {
 		description: 'Check that required tools are presents on the system')
 
 		project.task('checkStructure',
-		type: MarkdownStructureCheckingTask,
+		type: StructureCheckingTask,
 		group: DOCUMENTATION,
 		description: 'Check that the project has the appropriate folder structure')
 
@@ -57,7 +67,7 @@ class PandocPlugin implements Plugin<Project> {
 
 
 		project.task('generateDocsHTML',
-		type: GenerateDocsHTML,
+		type: GenerateMd2HTML,
 		group: DOCUMENTATION,
 		dependsOn: ['checkTools','copyResources'],
 		description: 'Generates the documentation in HTML format.')
@@ -70,19 +80,19 @@ class PandocPlugin implements Plugin<Project> {
 		
 		
 		project.task('generateDocsTex2PDF',
-		type: GenerateTex2Pdf,
+		type: GenerateTex2PDF,
 		group: DOCUMENTATION,
 		dependsOn: ['copyResources'],
 		description: 'Generates the documentation in PDF format from a TeX input.')
 
 		project.task('generateDocsEbook',
-		type: GenerateDocsEbook,
+		type: GenerateMd2Ebook,
 		group: DOCUMENTATION,
 		dependsOn: ['checkTools','copyResources'],
 		description: 'Generates the documentation in Ebook format.')
 
 		project.task('generateDocsPDF',
-		type: GenerateDocsPDF,
+		type: GenerateHtml2PDF,
 		group: DOCUMENTATION,
 		dependsOn: ['checkTools','copyResources'],
 		description: 'Generates the documentation in PDF format.')

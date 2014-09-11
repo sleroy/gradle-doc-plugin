@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.metrixware.gradle.markdown
+package com.metrixware.gradle.pandoc.project
 
 import org.apache.commons.io.FileUtils
 import org.gradle.api.DefaultTask

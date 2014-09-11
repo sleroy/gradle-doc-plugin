@@ -1,4 +1,4 @@
-package com.metrixware.gradle.markdown.postprocess;
+package com.metrixware.gradle.pandoc.postprocess;
 
 public class RegexPattern {
 	private String pattern;

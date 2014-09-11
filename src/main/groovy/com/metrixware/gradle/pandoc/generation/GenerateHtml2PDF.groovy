@@ -13,16 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.metrixware.gradle.markdown
+package com.metrixware.gradle.pandoc.generation
 
 import org.gradle.api.GradleScriptException
 import org.gradle.api.tasks.TaskAction
+
+import com.metrixware.gradle.pandoc.DocumentationTask;
 /**
  * Generates the documentation in pdf format
  * @author sleroy
  *
  */
-class GenerateDocsPDF extends DocumentationTask {
+class GenerateHtml2PDF extends DocumentationTask {
 
 	/**
 	 * This task collects all html files generated inside the site/ folder and converts them into pdf.
