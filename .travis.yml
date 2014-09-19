@@ -2,7 +2,7 @@ language: groovy
 
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install -y pandoc wkhtmltopdf calibre calibre-bin
+  - sudo apt-get install -y pandoc
 
 script: ./gradlew clean build cobertura
 
