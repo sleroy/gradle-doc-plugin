@@ -44,7 +44,7 @@ jar {
 
 def pomConfig = {
     name project.name
-    description 'A Gradle plugin for transforming Markdown to HTML/PDF/EBOOK with Pandoc'
+    description 'A Gradle plugin for transforming Markdown/Latex to HTML/PDF/EPUB/Eclipse with Pandoc'
     url 'https://github.com/sleroy/gradle-pandoc-plugin'
     inceptionYear '2014'
     licenses {
@@ -59,7 +59,8 @@ def pomConfig = {
     }
     developers {
         [
-            sleroy: 'Sylvain Leroy'
+            sleroy: 'Sylvain Leroy',
+            afloch : 'Antoine Floch'
         ].each { devId, devName ->
             developer {
                 id devId
@@ -98,8 +99,8 @@ bintray {
         repo = 'maven'
         userOrg = 'sleroy'
         name = 'gradle-pandoc-plugin'
-        desc = 'A Gradle plugin for transforming Markdown to HTML/PDF/EBOOK with Pandoc'
+        desc = 'A Gradle plugin for transforming Markdown/Latex to HTML/PDF/EPUB/Eclipse with Pandoc'
         licenses = ['Apache-2.0']
-        labels = ['gradle', 'plugin', 'markdown', 'pandoc', 'pdf']
+        labels = ['gradle', 'plugin', 'markdown','latex','eclipse', 'pandoc', 'pdf']
     }
 }

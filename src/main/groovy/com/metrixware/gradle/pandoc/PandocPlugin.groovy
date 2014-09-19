@@ -17,16 +17,16 @@ package com.metrixware.gradle.pandoc
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.ExtensionAware
 
-import com.metrixware.gradle.pandoc.generation.GenerateHtml2PDF;
-import com.metrixware.gradle.pandoc.generation.GenerateMd2Ebook;
-import com.metrixware.gradle.pandoc.generation.GenerateMd2HTML;
-import com.metrixware.gradle.pandoc.generation.GenerateTex2HTML;
-import com.metrixware.gradle.pandoc.generation.GenerateTex2PDF;
-import com.metrixware.gradle.pandoc.project.CopyResourcesTask;
-import com.metrixware.gradle.pandoc.project.InitDocProjectTask;
-import com.metrixware.gradle.pandoc.project.MarkdownToolCheckingTask;
-import com.metrixware.gradle.pandoc.project.StructureCheckingTask;
+import com.metrixware.gradle.pandoc.generation.EclipseGenerationTask
+import com.metrixware.gradle.pandoc.generation.EpubGenerationTask
+import com.metrixware.gradle.pandoc.generation.HtmlGenerationTask
+import com.metrixware.gradle.pandoc.generation.Md2PdfGenerationTask
+import com.metrixware.gradle.pandoc.generation.Tex2PdfGenerationTask
+import com.metrixware.gradle.pandoc.project.DocumentationConfigurationTask
+import com.metrixware.gradle.pandoc.project.DocumentationPrepareTask
+import com.metrixware.gradle.pandoc.project.ToolCheckingTask
 
 
 
@@ -38,73 +38,68 @@ class PandocPlugin implements Plugin<Project> {
 	private static final String DOCUMENTATION = 'Documentation'
 
 	void apply(Project project) {
-		project.extensions.create('documentation', DocumentationConfiguration)
+		ExtensionAware documentation = project.extensions.create('documentation', DocumentationExtension)
+		documentation.extensions.templates = project.container(TemplateExtension)
+		documentation.extensions.documents = project.container(DocumentExtension)
 
-		project.task('checkTools',
-		type: MarkdownToolCheckingTask,
+		
+		project.task('pandoc-configure',
+		type: DocumentationConfigurationTask,
 		group: DOCUMENTATION,
-		description: 'Check that required tools are presents on the system')
+		description: 'Initializes the project structure directories from the templates definition.')
 
-		project.task('checkStructure',
-		type: StructureCheckingTask,
+		project.task('pandoc-prepare',
+		type: DocumentationPrepareTask,
 		group: DOCUMENTATION,
-		description: 'Check that the project has the appropriate folder structure')
-
-
-		project.task('initDocProject',
-		type: InitDocProjectTask,
-		group: DOCUMENTATION,
-		description: 'Initializes the current project by creating the default project structure.')
-
-		project.task('copyResources',
-		type: CopyResourcesTask,
-		group: DOCUMENTATION,
-		dependsOn: [
-			'initDocProject',
-			'checkStructure'
-		],
+		dependsOn: ['pandoc-configure'],
 		description: 'Copy the documentation resources into the temporary folder to produce the documentation.')
 
-
-		project.task('generateDocsHTML',
-		type: GenerateMd2HTML,
+		project.task('pandoc-check',
+		type: ToolCheckingTask,
 		group: DOCUMENTATION,
-		dependsOn: ['checkTools','copyResources'],
-		description: 'Generates the documentation in HTML format.')
+		description: 'Check if all required tools are installed.')
+	
 		
-		project.task('generateDocsTex2HTML',
-		type: GenerateTex2HTML,
+		project.task('pandoc-html',
+		type: HtmlGenerationTask,
 		group: DOCUMENTATION,
-		dependsOn: ['copyResources'],
-		description: 'Generates the documentation in HTML format from a TeX input.')
+		dependsOn: ['pandoc-prepare','pandoc-check'],
+		description: 'Produce all HTML documentations.')
+
+		project.task('pandoc-epub',
+		type: EpubGenerationTask,
+		group: DOCUMENTATION,
+		dependsOn: ['pandoc-prepare','pandoc-check'],
+		description: 'Produce all EBooks documentations.')
+
+
+		project.task('pandoc-tex2pdf',
+		type: Tex2PdfGenerationTask,
+		group: DOCUMENTATION,
+		dependsOn: ['pandoc-prepare','pandoc-check'],
+		description: 'Produce all PDF documentations from LaTeX sources.')
+
+		project.task('pandoc-md2pdf',
+		type: Md2PdfGenerationTask,
+		group: DOCUMENTATION,
+		dependsOn: ['pandoc-prepare','pandoc-check'],
+		description: 'Produce all PDF documentations from markdown sources.')
+
+		project.task('pandoc-pdf',
+		group: DOCUMENTATION,
+		dependsOn: ['pandoc-tex2pdf','pandoc-md2pdf'],
+		description: 'Produce all PDF documentations.')
 		
+		project.task('pandoc-eclipse',
+		group: DOCUMENTATION,
+		type: EclipseGenerationTask,
+		dependsOn: ['pandoc-prepare','pandoc-check'],
+		description: 'Produce all Eclipse documentations.')
 		
-		project.task('generateDocsTex2PDF',
-		type: GenerateTex2PDF,
+		project.task('pandoc-all',
 		group: DOCUMENTATION,
-		dependsOn: ['copyResources'],
-		description: 'Generates the documentation in PDF format from a TeX input.')
-
-		project.task('generateDocsEbook',
-		type: GenerateMd2Ebook,
-		group: DOCUMENTATION,
-		dependsOn: ['checkTools','copyResources'],
-		description: 'Generates the documentation in Ebook format.')
-
-		project.task('generateDocsPDF',
-		type: GenerateHtml2PDF,
-		group: DOCUMENTATION,
-		dependsOn: ['checkTools','copyResources'],
-		description: 'Generates the documentation in PDF format.')
-
-		project.task('generateDocs',
-		dependsOn: [
-			'generateDocsHTML',
-			'generateDocsEbook',
-			'generateDocsPDF'
-		],
-		group: DOCUMENTATION,
-		description: 'Generate HTML, E-book and PDF documents from markdown docs')
+		dependsOn: ['pandoc-pdf','pandoc-epub','pandoc-html','pandoc-eclipse'],
+		description: 'Produce all documentations.')
 	}
 }
 

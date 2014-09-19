@@ -44,11 +44,12 @@ repositories {
 
 dependencies {
 	compile gradleApi()
+	compile localGroovy()
 	compile 'org.apache.commons:commons-lang3:3.1'
 	compile 'nz.net.ultraq.lesscss:lesscss-compiler:1.0.2'
 	compile 'org.apache.velocity:velocity:1.7'
 	compile 'commons-io:commons-io:2.4'
-
+ 	compile 'org.eclipse.xtend:org.eclipse.xtend.lib:2.7.+'
 
 	testCompile('org.spockframework:spock-core:0.7-groovy-2.0') {
 
@@ -75,10 +76,21 @@ cobertura {
 	coverageSourceDirs = sourceSets.main.groovy.srcDirs
 }
 
+sourceSets {
+  narc {
+      groovy {
+      	srcDir 'src/main/groovy/'
+      	exclude '**/EclipseDocumentationProjectGenerator.groovy'
+      }
+  }
+}
+
+
 codenarc {
 	configFile = file('config/codenarc/codenarc.groovy')
 	// run codenarc on production sources only
-	sourceSets = [project.sourceSets.main]
+	sourceSets = [project.sourceSets.narc]
+	
 }
 
 task sourceJar(type: Jar) {
@@ -89,21 +101,3 @@ task sourceJar(type: Jar) {
 }
 
 artifacts { sourceJar }
-
-
-
-// publish the bundle archive on nexus
-publishing {
-
-    repositories {
-        maven {
-            url "http://zeus:8080/nexus/content/repositories/releases"
-	    credentials{
-		username mavenUser 
-		password mavenPassword
-	    }
-        }
-    }
-}
-
-
