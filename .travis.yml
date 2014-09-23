@@ -1,5 +1,9 @@
 language: groovy
 
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -y pandoc
+
 script: ./gradlew clean build cobertura
 
 jdk:

@@ -5,7 +5,7 @@ buildscript {
         maven { url 'http://dl.bintray.com/sleroy/maven' }
     }
     dependencies {
-        classpath 'com.metrixware:gradle-pandoc-plugin:0.1.1-SNAPSHOT'
+        classpath 'com.metrixware:gradle-pandoc-plugin:0.1.2'
     }
 }
 apply plugin: 'markdown'
