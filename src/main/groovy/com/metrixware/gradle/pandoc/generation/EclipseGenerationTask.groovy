@@ -67,7 +67,7 @@ class EclipseGenerationTask extends HtmlGenerationTask {
 		def outFolder = getDocumentOutputFolder(doc, template, lang, output)
 		def outFile = getDocumentOutputFile(doc, template, lang, output)
 		def toc = HtmlSectionExtractor.extract(outFile.text, 3)
-		projectgenerator.generate(tempOutFolder, toc,'html/${doc.name}-${lang}.html')
+		projectgenerator.generate(tempOutFolder, toc,"html/${doc.name}-${lang}.html")
 		def eclipseFolder = projectgenerator.getProjectDirectory(tempOutFolder)
 
 		FileUtils.moveDirectory(outFolder, FileUtils.getFile(eclipseFolder,'html'))
@@ -76,11 +76,11 @@ class EclipseGenerationTask extends HtmlGenerationTask {
 			
 	 File getTempOutputDocument(DocumentExtension doc, TemplateExtension template, String lang, String output){
 		def dir = getTempOutputFolder(doc, template, lang, output)
-		return FileUtils.getFile(dir, '${doc.name}-${lang}.html')
+		return FileUtils.getFile(dir, "${doc.name}-${lang}.html")
 	}
 	
 	 File getDocumentOutputFile(DocumentExtension doc, TemplateExtension template, String lang, String output){
-		return FileUtils.getFile(getDocumentOutputFolder(doc,template,lang,output),'${doc.name}-${lang}.html')
+		return FileUtils.getFile(getDocumentOutputFolder(doc,template,lang,output),"${doc.name}-${lang}.html")
 	}
 
 }
