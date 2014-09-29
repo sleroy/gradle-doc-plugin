@@ -73,6 +73,8 @@ def pomConfig = {
     }
 }
 
+
+
 publishing {
     publications {
         mavenCustom(MavenPublication) {
@@ -84,6 +86,15 @@ publishing {
             }
         }
     }
+    repositories {
+		maven {
+			credentials {
+				username mavenUser
+ 				password mavenPassword
+			}
+			url "http://zeus:8081/nexus/content/repositories/releases/"
+  		}
+	}
 }
 
 task install(dependsOn: publishToMavenLocal)
@@ -104,3 +115,4 @@ bintray {
         labels = ['gradle', 'plugin', 'markdown','latex','eclipse', 'pandoc', 'pdf']
     }
 }
+
