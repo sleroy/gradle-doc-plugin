@@ -13,51 +13,50 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.metrixware.gradle.markdown
+package com.metrixware.gradle.pandoc
 
 import org.apache.commons.io.FileUtils
+import org.apache.commons.io.IOUtils;
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.testfixtures.ProjectBuilder
 
 import spock.lang.Specification
 
-import com.metrixware.gradle.pandoc.DocumentExtension
+import com.metrixware.gradle.pandoc.Document
 import com.metrixware.gradle.pandoc.PandocPlugin
-import com.metrixware.gradle.pandoc.TemplateExtension
+import com.metrixware.gradle.pandoc.Template
 
-class Md2PdfGenerationSpec extends Specification {
+class BuildRepositorySpec extends Specification {
 
 
 
-	def "Generates PDF Documentation from TeX"() {
+	def "Build templates repository"() {
 		
-		//prepare project
+			//prepare project
 		def Project project = ProjectBuilder.builder().build()
-		File fromFolder = new File('src/test/resources/fakeDoc/');
+		
+		File fromFolder = new File('src/test/resources/fakeDoc/')
 		FileUtils.copyDirectory(fromFolder, project.rootDir)
-		def TemplateExtension articleTemplate = new TemplateExtension("article")
-		articleTemplate.setOutputs('html','pdf')
-		def manualTemplate = new TemplateExtension("manual")
-		def DocumentExtension document = new DocumentExtension("example")
-		document.setType("md")
+		def document = new Document("example")
+		
 
 		
 		when:
 		project.apply plugin: PandocPlugin
-		project.documentation.templates.add(articleTemplate)
-		project.documentation.templates.add(manualTemplate)
 		project.documentation.documents.add(document)
+		
 		
 		project.tasks.findByName('pandoc-configure').runTask()
 		project.tasks.findByName('pandoc-prepare').runTask()
+		project.tasks.findByName('pandoc-repository').runTask()
 
-		Task markdownToHtmlTask = project.tasks.findByName('pandoc-md2pdf')
-		markdownToHtmlTask.runTask()
-
-		then:
-		markdownToHtmlTask != null
-		fromFolder.exists();
 	
+		then:
+		def repo = FileUtils.getFile(project.getBuildDir(),"repository")
+		repo.exists()
+		
+		expect:
+			repo.listFiles().length ==1
 	}
 }

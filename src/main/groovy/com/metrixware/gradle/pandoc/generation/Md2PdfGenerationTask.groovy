@@ -18,8 +18,8 @@ package com.metrixware.gradle.pandoc.generation
 import org.apache.commons.lang3.StringUtils
 import org.slf4j.Logger
 
-import com.metrixware.gradle.pandoc.DocumentExtension
-import com.metrixware.gradle.pandoc.TemplateExtension
+import com.metrixware.gradle.pandoc.Document
+import com.metrixware.gradle.pandoc.Template
 
 
 
@@ -27,13 +27,13 @@ class Md2PdfGenerationTask extends AbstractPandocGenerationTask {
 
 
 	@Override
-	protected boolean isSupported(DocumentExtension doc, String output) {
+	protected boolean isSupported(Document doc, String output) {
 		return 'pdf'.equals(output) && ('md'.equals(doc.type))
 	}
 
 	@Override
-	protected void process(File folder, DocumentExtension doc,
-			TemplateExtension template, String lang, String output) {
+	protected void process(File folder, Document doc,
+			Template template, String lang, String output) {
 		def tmpOutDir = getTempOutputFolder(doc,template,lang,output)
 		def input = getTempSourceDocument(doc, template, lang, output).name
 		def tmpOut = getTempOutputDocument(doc, template, lang, output).name

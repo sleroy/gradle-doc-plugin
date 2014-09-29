@@ -3,11 +3,11 @@ package com.metrixware.gradle.pandoc.project;
 
 import java.io.File;
 
-import com.metrixware.gradle.pandoc.TemplateExtension;
+import com.metrixware.gradle.pandoc.Template;
 
 public interface ITemplateProcessor {
 
-	boolean configure(TemplateExtension template,String output, File templateFolder);
+	boolean configure(Template template,String output, File templateFolder);
 	
 	
 }

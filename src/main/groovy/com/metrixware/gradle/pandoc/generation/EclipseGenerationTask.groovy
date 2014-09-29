@@ -19,8 +19,8 @@ import org.apache.commons.io.FileUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import com.metrixware.gradle.pandoc.DocumentExtension
-import com.metrixware.gradle.pandoc.TemplateExtension
+import com.metrixware.gradle.pandoc.Document
+import com.metrixware.gradle.pandoc.Template
 import com.metrixware.gradle.pandoc.eclipse.EclipseDocumentationProjectGenerator
 import com.metrixware.gradle.pandoc.eclipse.HtmlSectionExtractor
 
@@ -33,14 +33,14 @@ class EclipseGenerationTask extends HtmlGenerationTask {
 
 
 	@Override
-	protected boolean isSupported(DocumentExtension doc, String output) {
+	protected boolean isSupported(Document doc, String output) {
 		return 'eclipse'.equals(output) && ('tex'.equals(doc.type)||'md'.equals(doc.type))
 	}
 	
 	
 	@Override
-	protected void copyToSite(File folder, DocumentExtension doc,
-			TemplateExtension template, String lang, String output) {
+	protected void copyToSite(File folder, Document doc,
+			Template template, String lang, String output) {
 			
 		super.copyToSite(folder, doc, template, lang, output)
 		
@@ -67,20 +67,20 @@ class EclipseGenerationTask extends HtmlGenerationTask {
 		def outFolder = getDocumentOutputFolder(doc, template, lang, output)
 		def outFile = getDocumentOutputFile(doc, template, lang, output)
 		def toc = HtmlSectionExtractor.extract(outFile.text, 3)
-		projectgenerator.generate(tempOutFolder, toc,'html/${doc.name}-${lang}.html')
+		projectgenerator.generate(tempOutFolder, toc,"html/${doc.name}-${lang}.html")
 		def eclipseFolder = projectgenerator.getProjectDirectory(tempOutFolder)
 
 		FileUtils.moveDirectory(outFolder, FileUtils.getFile(eclipseFolder,'html'))
 		FileUtils.moveDirectory(eclipseFolder, FileUtils.getFile(outFolder,eclipseFolder.name))
 	}
 			
-	 File getTempOutputDocument(DocumentExtension doc, TemplateExtension template, String lang, String output){
+	 File getTempOutputDocument(Document doc, Template template, String lang, String output){
 		def dir = getTempOutputFolder(doc, template, lang, output)
-		return FileUtils.getFile(dir, '${doc.name}-${lang}.html')
+		return FileUtils.getFile(dir, "${doc.name}-${lang}.html")
 	}
 	
-	 File getDocumentOutputFile(DocumentExtension doc, TemplateExtension template, String lang, String output){
-		return FileUtils.getFile(getDocumentOutputFolder(doc,template,lang,output),'${doc.name}-${lang}.html')
+	 File getDocumentOutputFile(Document doc, Template template, String lang, String output){
+		return FileUtils.getFile(getDocumentOutputFolder(doc,template,lang,output),"${doc.name}-${lang}.html")
 	}
 
 }

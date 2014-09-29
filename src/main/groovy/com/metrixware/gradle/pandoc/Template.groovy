@@ -3,11 +3,11 @@ package com.metrixware.gradle.pandoc
 
 
 
-class TemplateExtension {
+class Template {
 	String name
 	String[] outputs=['html']
 
-	TemplateExtension(String name){
+	Template(String name){
 		this.name = name
 	}
 
@@ -15,6 +15,10 @@ class TemplateExtension {
 		return name
 	}
 
+	void setOutputs(String[] outputs) {
+		this.outputs = outputs
+	}
+	
 	String[] getOutputs() {
 		return outputs
 	}

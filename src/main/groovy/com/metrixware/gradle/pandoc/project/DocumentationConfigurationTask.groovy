@@ -7,8 +7,8 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import com.metrixware.gradle.pandoc.AbstractDocumentationTask
-import com.metrixware.gradle.pandoc.DocumentExtension
-import com.metrixware.gradle.pandoc.TemplateExtension
+import com.metrixware.gradle.pandoc.Document
+import com.metrixware.gradle.pandoc.Template
 
 class DocumentationConfigurationTask extends AbstractDocumentationTask {
 	private static final Logger LOGGER = LoggerFactory.getLogger('pandoc-configure')
@@ -23,16 +23,16 @@ class DocumentationConfigurationTask extends AbstractDocumentationTask {
 
 
 	protected void process() {
-		print('\n Configure the documentation directories')
+		println('Configure the documentation directories')
 		def root = rootFolder
 		root.mkdirs()
 		this.tmpFolder.mkdirs()
 
-		LOGGER.info('Initialization of configured templates folders')
+		LOGGER.debug('Initialization of configured templates folders')
 		templatesFolder.mkdir()
 
-		for(TemplateExtension template : project.documentation.templates){
-			LOGGER.info('--Initialize template '+template.name)
+		for(Template template : project.documentation.templates){
+			LOGGER.debug('--Initialize template '+template.name)
 			def folder = getTemplateFolder(template)
 			folder.mkdirs()
 			for(String output : template.outputs){
@@ -42,10 +42,10 @@ class DocumentationConfigurationTask extends AbstractDocumentationTask {
 				getTemplateFile(template, output).createNewFile()
 			}
 		}
-		LOGGER.info('Initialization of configured documents')
+		LOGGER.debug('Initialization of configured documents')
 
-		for(DocumentExtension document : project.documentation.documents){
-			LOGGER.info('--Initialize document '+document.name)
+		for(Document document : project.documentation.documents){
+			LOGGER.debug('--Initialize document '+document.name)
 			def folder =  FileUtils.getFile(sourcesFolder,document.name)
 			folder.mkdirs()
 			for(String lang : document.languages){
@@ -58,7 +58,7 @@ class DocumentationConfigurationTask extends AbstractDocumentationTask {
 		}
 	}
 
-	void configure(TemplateExtension template,String output,File folder){
+	void configure(Template template,String output,File folder){
 		for(ITemplateProcessor configurator : templatesConfigurators){
 			if(configurator.configure(template,output,folder)){
 				return 

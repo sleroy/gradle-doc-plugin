@@ -15,8 +15,8 @@
  */
 package com.metrixware.gradle.pandoc.generation
 
-import com.metrixware.gradle.pandoc.DocumentExtension
-import com.metrixware.gradle.pandoc.TemplateExtension
+import com.metrixware.gradle.pandoc.Document
+import com.metrixware.gradle.pandoc.Template
 
 /**
  * Generates the documentation in EPUB format.
@@ -27,7 +27,7 @@ class EpubGenerationTask extends AbstractPandocGenerationTask {
 
 
 	@Override
-	protected boolean isSupported(DocumentExtension doc, String output) {
+	protected boolean isSupported(Document doc, String output) {
 		return 'epub'.equals(output) && ('tex'.equals(doc.type)||'md'.equals(doc.type))
 	}
 }
