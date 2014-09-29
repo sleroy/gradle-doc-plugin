@@ -34,10 +34,10 @@ class BuildPackagedDocTask extends AbstractDocumentationTask {
 
 	protected void process() {
 		if(outputDir.listFiles().length>0){
-			def repDirectory = FileUtils.getFile(project.getBuildDir(),"dist")
+			def repDirectory = FileUtils.getFile(project.buildDir,'dist')
 			repDirectory.deleteDir()
 			repDirectory.mkdirs()
-			def out = FileUtils.getFile(repDirectory,"documents.zip")
+			def out = FileUtils.getFile(repDirectory,'documents.zip')
 			println("Package documents ${documents} into ${out}")
 			ZipFile zip = new ZipFile(out)
 			for(File doc : outputDir.listFiles()){
@@ -46,7 +46,7 @@ class BuildPackagedDocTask extends AbstractDocumentationTask {
 				}
 			}
 		}else{
-			println("Unable to build the documentation packaging: no documents have been produced.")
+			println('Unable to build the documentation packaging: no documents have been produced.')
 		}
 	}
 }

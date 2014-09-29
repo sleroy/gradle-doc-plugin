@@ -14,7 +14,6 @@ abstract class AbstractPandocGenerationTask extends AbstractGenerationTask{
 	@Override
 	protected void process(File folder, Document doc,
 			Template template, String lang, String output) {
-		def tmpOutDir = getTempOutputFolder(doc,template,lang,output)
 		def input = getTempSourceDocument(doc, template, lang, output)
 		def tmpOut = getTempOutputDocument(doc, template, lang, output)
 		def generateCmdLine = [

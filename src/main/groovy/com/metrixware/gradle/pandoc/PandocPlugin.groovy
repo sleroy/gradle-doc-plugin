@@ -1,7 +1,7 @@
 /*
  * Copyright 2014-2015 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -24,8 +24,8 @@ import com.metrixware.gradle.pandoc.generation.EpubGenerationTask
 import com.metrixware.gradle.pandoc.generation.HtmlGenerationTask
 import com.metrixware.gradle.pandoc.generation.Md2PdfGenerationTask
 import com.metrixware.gradle.pandoc.generation.Tex2PdfGenerationTask
-import com.metrixware.gradle.pandoc.project.BuildPackagedDocTask;
-import com.metrixware.gradle.pandoc.project.BuildRepositoryTask;
+import com.metrixware.gradle.pandoc.project.BuildPackagedDocTask
+import com.metrixware.gradle.pandoc.project.BuildRepositoryTask
 import com.metrixware.gradle.pandoc.project.CleanTask
 import com.metrixware.gradle.pandoc.project.DocumentationConfigurationTask
 import com.metrixware.gradle.pandoc.project.DocumentationPrepareTask
@@ -68,13 +68,23 @@ class PandocPlugin implements Plugin<Project> {
 		group: DOCUMENTATION,
 		description: 'Build a templates repository. All templates of the documentation project are zipped into a single zip file.')
 
-		
+
 		project.task('pandoc-check',
 		type: ToolCheckingTask,
 		group: DOCUMENTATION,
 		description: 'Check if all required tools are installed.')
 
 
+		addGenerationTasks(project)
+
+		project.task('pandoc-build',
+		type: BuildPackagedDocTask,
+		group: DOCUMENTATION,
+		dependsOn: ['pandoc-all'],
+		description: 'Produce and package all documents into a single zip file.')
+	}
+
+	private addGenerationTasks(Project project) {
 		project.task('pandoc-html',
 		type: HtmlGenerationTask,
 		group: DOCUMENTATION,
@@ -138,13 +148,6 @@ class PandocPlugin implements Plugin<Project> {
 			'pandoc-eclipse'
 		],
 		description: 'Produce all documentations.')
-		
-		
-		project.task('pandoc-build',
-		type: BuildPackagedDocTask,
-		group: DOCUMENTATION,
-		dependsOn: ['pandoc-all'],
-		description: 'Produce and package all documents into a single zip file.')
 	}
 }
 

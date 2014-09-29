@@ -34,13 +34,13 @@ class BuildRepositoryTask extends AbstractDocumentationTask {
 
 	protected void process() {
 
-		def repDirectory = FileUtils.getFile(project.getBuildDir(),"repository")
+		def repDirectory = FileUtils.getFile(project.buildDir,'repository')
 		repDirectory.deleteDir()
 		repDirectory.mkdirs()
-		def out = FileUtils.getFile(repDirectory,"templates.zip")
+		def out = FileUtils.getFile(repDirectory,'templates.zip')
 		println("Build repository ${out} for templates ${templates}")
 		ZipFile zip = new ZipFile(out)
-		for(File template : getTemplatesFolder().listFiles()){
+		for(File template : templatesFolder.listFiles()){
 			if(template.isDirectory())
 				zip.addFolder(template, new ZipParameters())
 		}
