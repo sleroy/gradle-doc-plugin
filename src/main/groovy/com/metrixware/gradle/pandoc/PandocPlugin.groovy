@@ -24,7 +24,8 @@ import com.metrixware.gradle.pandoc.generation.EpubGenerationTask
 import com.metrixware.gradle.pandoc.generation.HtmlGenerationTask
 import com.metrixware.gradle.pandoc.generation.Md2PdfGenerationTask
 import com.metrixware.gradle.pandoc.generation.Tex2PdfGenerationTask
-import com.metrixware.gradle.pandoc.project.CleanTask;
+import com.metrixware.gradle.pandoc.project.BuildRepositoryTask;
+import com.metrixware.gradle.pandoc.project.CleanTask
 import com.metrixware.gradle.pandoc.project.DocumentationConfigurationTask
 import com.metrixware.gradle.pandoc.project.DocumentationPrepareTask
 import com.metrixware.gradle.pandoc.project.ToolCheckingTask
@@ -59,6 +60,12 @@ class PandocPlugin implements Plugin<Project> {
 		type: CleanTask,
 		group: DOCUMENTATION,
 		description: 'Clean-up the temporary and output directories. May be usefull to get the last version of a templates repository.')
+
+
+		project.task('pandoc-repository',
+		type: BuildRepositoryTask,
+		group: DOCUMENTATION,
+		description: 'Build a templates repository. All templates of the documentation project are zipped into a single zip file.')
 
 
 		project.task('pandoc-check',

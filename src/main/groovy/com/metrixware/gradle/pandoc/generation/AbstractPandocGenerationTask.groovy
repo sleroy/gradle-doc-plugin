@@ -28,11 +28,11 @@ abstract class AbstractPandocGenerationTask extends AbstractGenerationTask{
 			input
 		]
 		if(hasTemplate(template,output)){
-			generateCmdLine.add('--template=' + project.file("$tmpOutDir/template.tpl"))
+			generateCmdLine.add('--template=' + getTempTemplateFile(doc, template, lang, output))
 		}else{
 			generateCmdLine.add('--standalone')
 		}	
-		LOGGER.info('Execute cmd '+StringUtils.join(generateCmdLine, ' '))
+		LOGGER.debug('Execute cmd '+StringUtils.join(generateCmdLine, ' '))
 		project.exec({
 			commandLine = generateCmdLine
 			workingDir = getTempOutputFolder(doc, template, lang, output)

@@ -16,6 +16,8 @@
 package com.metrixware.gradle.pandoc.generation
 
 import org.apache.commons.io.FileUtils
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import com.metrixware.gradle.pandoc.AbstractDocumentationTask
 import com.metrixware.gradle.pandoc.Document
@@ -26,8 +28,7 @@ import com.metrixware.gradle.pandoc.Template
  *
  */
 abstract class AbstractGenerationTask extends AbstractDocumentationTask {
-
-
+	
 
 	protected void process() {
 		for(Document document : documents){
@@ -38,7 +39,7 @@ abstract class AbstractGenerationTask extends AbstractDocumentationTask {
 						for(String lang : document.languages){
 							def dir = getTempOutputFolder(document, template, lang, output)
 							dir.mkdirs()
-							println("\nGenerate document ${document.name} ${template.name} [${output},${lang}]")
+							println("Generate document ${document.name} ${template.name} [${output},${lang}]")
 							process(dir, document,template,lang,output)
 						}
 					}

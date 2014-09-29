@@ -20,19 +20,20 @@ package com.metrixware.gradle.pandoc.project
 import javax.activation.MimetypesFileTypeMap
 import javax.imageio.ImageIO
 
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.core.ZipFile
+import net.lingala.zip4j.exception.ZipException
 
 import org.apache.commons.io.FileUtils
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.FilenameUtils
+import org.apache.commons.io.IOUtils
 import org.gradle.api.tasks.TaskAction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+import com.google.common.collect.Lists
 import com.metrixware.gradle.pandoc.AbstractDocumentationTask
 import com.metrixware.gradle.pandoc.Document
-import com.metrixware.gradle.pandoc.Repository;
+import com.metrixware.gradle.pandoc.Repository
 import com.metrixware.gradle.pandoc.Template
 
 class DocumentationPrepareTask extends AbstractDocumentationTask {
@@ -41,27 +42,45 @@ class DocumentationPrepareTask extends AbstractDocumentationTask {
 	private static final Logger LOGGER = LoggerFactory.getLogger('pandoc-prepare')
 
 	protected void process() {
-		print('Prepare the documentation folders')
+		println('Prepare the documentation folders')
 
 		initFolders()
 
-		LOGGER.info('Fetching repositories into temporary directory...')
+		def repos = getTempRepositoriesDirectory();
+
+		LOGGER.debug("Fetching repositories into ${repos}")
 		for(Repository repo : repositories){
-			fetchIfNeeded(repo)
+			fetchIfNeeded(repo,repos)
 		}
 
-		LOGGER.info('Copy templates into temporary directory...')
+		//add the templates downloaded from repositories
+		for(File remoteTemplate : repos.listFiles()){
+			if(remoteTemplate.isDirectory()){
+				def scanned = scan(remoteTemplate)
+				if(templates.find{Template t -> t.name.equals(scanned.name)}==null){
+					project.documentation.templates.add(scanned)
+					def remote = FileUtils.getFile(repos,scanned.name)
+					LOGGER.debug("-- Add template ${scanned.name} from remote repositories.")
+					FileUtils.copyDirectoryToDirectory(remote, tmpTemplatesFolder)
+				}else{
+					LOGGER.warn("Template ${scanned.name} already exists in the documentation project, remote template will be ignored.")
+				}
+			}
+		}
+
+
+		LOGGER.debug('Copy templates into temporary directory')
 		FileUtils.copyDirectory(templatesFolder, tmpTemplatesFolder)
 
 		def magicVariablesMap = globalVariables
 
 		project.fileTree(tmpTemplatesFolder) { include '**/*.tpl' }.each { docFile ->
-			LOGGER.info('-- Inject global variables in template file '+docFile)
+			LOGGER.debug('Inject global variables in template file '+docFile)
 			preprocess(docFile,magicVariablesMap)
 		}
 
 
-		LOGGER.info('Copy sources for each supported template...')
+		LOGGER.debug("Prepare documents for templates ${templates}")
 		for(Document document : documents){
 			def supported = templates.findAll { Template t ->
 				document.support(t)
@@ -76,34 +95,47 @@ class DocumentationPrepareTask extends AbstractDocumentationTask {
 		}
 	}
 
+	private File getTempRepositoriesDirectory(){
+		return FileUtils.getFile(tmpFolder,'repositories')
+	}
 
 
-	private fetchIfNeeded(Repository repository){
+	private fetchIfNeeded(Repository repository, File tmpDir){
 		try{
 			URL url = new URL(repository.url)
-
-			def out = FileUtils.getFile(tmpTemplatesFolder,FilenameUtils.getName(url));
+			def name = FilenameUtils.getName(url.toString())
+			def out = FileUtils.getFile(tmpDir,name)
 			if(!out.exists()){
-				LOGGER.info("-- ${repository.url} : downloading templates.")
+				LOGGER.info("Download repository ${repository.url}")
 				FileUtils.copyURLToFile(url, out)
 				ZipFile zipFile = new ZipFile(out)
 				try{
-					zipFile.extractAll(tmpTemplatesFolder)
+					zipFile.extractAll(tmpDir.canonicalPath)
 				}catch(ZipException e){
 					LOGGER.error("Unable to unzip template repository ${repository.url}")
 				}
 			}else{
-				LOGGER.info("-- ${repository.url} : already downloaded.")
+				LOGGER.info("Repository ${repository.url} already in cache")
 			}
 		}catch( e){
-			LOGGER.error("Unable to fetch repository ${repository.url}", e)
+			LOGGER.error("Unable to fetch repository ${repository.name}", e)
 		}
+	}
+
+	private Template scan(File directory){
+		Template template = new Template(directory.name)
+		List<String> outputs = new ArrayList<String>()
+		for(File output : directory.listFiles()){
+			outputs.add(output.name)
+		}
+		template.setOutputs(outputs.toArray(new String[outputs.size()]))
+		return template
 	}
 
 	private injectTemplate(Document document, Template template, String lang, String output, Properties magicVariablesMap) {
 		def dir = getTempOutputFolder(document, template, lang, output)
 
-		LOGGER.info('-- Prepare document '+document.name+' '+template.name+' ['+output+','+lang+'] in '+dir )
+		LOGGER.debug('-- Prepare document '+document.name+' '+template.name+' ['+output+','+lang+'] in '+dir )
 		Properties docVariables = getDocumentVariables(document, lang)
 		docVariables.putAll(magicVariablesMap)
 		dir.mkdirs()
@@ -124,7 +156,7 @@ class DocumentationPrepareTask extends AbstractDocumentationTask {
 		project.fileTree(tempOutput).each { File file ->
 			if(isSourceFile(file)){
 
-				LOGGER.info('--- Inject document variables in text file '+file  )
+				LOGGER.debug('--- Inject document variables in text file '+file  )
 				preprocess(file,docVariables)
 
 			}
@@ -145,15 +177,12 @@ class DocumentationPrepareTask extends AbstractDocumentationTask {
 
 
 	private initFolders() {
-		LOGGER.debug('Creating temporary folder in ${tmpFolder}')
-		FileUtils.deleteDirectory(tmpFolder)
-		tmpFolder.mkdirs()
-		LOGGER.debug('Creating temporary templates folder in ${tmpTemplatesFolder}')
+		LOGGER.debug("Creating temporary templates directory in ${tmpTemplatesFolder}")
+		tmpTemplatesFolder.deleteDir();
 		tmpTemplatesFolder.mkdirs()
-		LOGGER.debug('Creating output directory')
+		LOGGER.debug("Creating output directory in ${outputDir}")
 		FileUtils.deleteDirectory(outputDir)
 		outputDir.mkdirs()
-		LOGGER.debug('Creating output documentation directory')
 	}
 
 }

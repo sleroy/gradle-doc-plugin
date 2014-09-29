@@ -15,6 +15,10 @@ class Template {
 		return name
 	}
 
+	void setOutputs(String[] outputs) {
+		this.outputs = outputs
+	}
+	
 	String[] getOutputs() {
 		return outputs
 	}

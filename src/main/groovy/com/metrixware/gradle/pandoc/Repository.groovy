@@ -4,10 +4,19 @@ package com.metrixware.gradle.pandoc
 
 
 class Repository {
-	String url;
+	String name
+	String url
 	
-	Repository(String url){
+	Repository(String name){
+		this.name = name
+	}
+	
+	void setUrl(String url) {
 		this.url = url
+	}
+	
+	String getName() {
+		return name
 	}
 
 	String getUrl() {

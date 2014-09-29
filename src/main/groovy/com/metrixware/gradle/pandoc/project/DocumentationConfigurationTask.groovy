@@ -23,16 +23,16 @@ class DocumentationConfigurationTask extends AbstractDocumentationTask {
 
 
 	protected void process() {
-		print('\n Configure the documentation directories')
+		println('Configure the documentation directories')
 		def root = rootFolder
 		root.mkdirs()
 		this.tmpFolder.mkdirs()
 
-		LOGGER.info('Initialization of configured templates folders')
+		LOGGER.debug('Initialization of configured templates folders')
 		templatesFolder.mkdir()
 
 		for(Template template : project.documentation.templates){
-			LOGGER.info('--Initialize template '+template.name)
+			LOGGER.debug('--Initialize template '+template.name)
 			def folder = getTemplateFolder(template)
 			folder.mkdirs()
 			for(String output : template.outputs){
@@ -42,10 +42,10 @@ class DocumentationConfigurationTask extends AbstractDocumentationTask {
 				getTemplateFile(template, output).createNewFile()
 			}
 		}
-		LOGGER.info('Initialization of configured documents')
+		LOGGER.debug('Initialization of configured documents')
 
 		for(Document document : project.documentation.documents){
-			LOGGER.info('--Initialize document '+document.name)
+			LOGGER.debug('--Initialize document '+document.name)
 			def folder =  FileUtils.getFile(sourcesFolder,document.name)
 			folder.mkdirs()
 			for(String lang : document.languages){

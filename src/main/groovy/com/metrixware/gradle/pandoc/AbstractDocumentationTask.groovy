@@ -111,7 +111,8 @@ abstract class AbstractDocumentationTask extends DefaultTask {
 	}
 
 	boolean hasTemplate(Template template, String output){
-		File templateFile = getTemplateFile(template, output)
+		
+		File templateFile = FileUtils.getFile(getTempTemplateFolder(template, output),'template.tpl')
 		return templateFile.exists() && !templateFile.text.isEmpty()
 	}
 

@@ -15,21 +15,35 @@
  */
 package com.metrixware.gradle.pandoc.project
 
+
+
+import net.lingala.zip4j.core.ZipFile
+import net.lingala.zip4j.model.ZipParameters
+
 import org.apache.commons.io.FileUtils
 
 import com.metrixware.gradle.pandoc.AbstractDocumentationTask
 
 /**
- * Delete temporary folders and output dir
+ * Build a templates repository from the templates of the documentation project
  * @author afloch
  *
  */
-class CleanTask extends AbstractDocumentationTask {
+class BuildRepositoryTask extends AbstractDocumentationTask {
 
 
 	protected void process() {
-		FileUtils.deleteDirectory(tmpFolder)
-		FileUtils.deleteDirectory(outputDir)
+
+		def repDirectory = FileUtils.getFile(project.getBuildDir(),"repository")
+		repDirectory.deleteDir()
+		repDirectory.mkdirs()
+		def out = FileUtils.getFile(repDirectory,"templates.zip")
+		println("Build repository ${out} for templates ${templates}")
+		ZipFile zip = new ZipFile(out)
+		for(File template : getTemplatesFolder().listFiles()){
+			if(template.isDirectory())
+				zip.addFolder(template, new ZipParameters())
+		}
 	}
 }
 
