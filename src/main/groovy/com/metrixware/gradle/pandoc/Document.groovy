@@ -6,13 +6,13 @@ import groovy.lang.Closure
 import java.util.Map
 
 
-class DocumentExtension {
+class Document {
 	String name
 	String type='md'
 	String[] languages=['en']
 	String[] templates=['all']
 
-	DocumentExtension(String name){
+	Document(String name){
 		this.name = name
 	}
 
@@ -24,7 +24,7 @@ class DocumentExtension {
 		return languages
 	}
 
-	boolean support(TemplateExtension template ){
+	boolean support(Template template ){
 		if(templates.find {String t -> t.equals('all')}!=null){
 			return true
 		}

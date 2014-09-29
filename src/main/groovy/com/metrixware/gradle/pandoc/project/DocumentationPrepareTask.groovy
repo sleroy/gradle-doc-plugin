@@ -15,17 +15,25 @@
  */
 package com.metrixware.gradle.pandoc.project
 
+
+
 import javax.activation.MimetypesFileTypeMap
 import javax.imageio.ImageIO
 
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+
 import org.apache.commons.io.FileUtils
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.gradle.api.tasks.TaskAction
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import com.metrixware.gradle.pandoc.AbstractDocumentationTask
-import com.metrixware.gradle.pandoc.DocumentExtension
-import com.metrixware.gradle.pandoc.TemplateExtension
+import com.metrixware.gradle.pandoc.Document
+import com.metrixware.gradle.pandoc.Repository;
+import com.metrixware.gradle.pandoc.Template
 
 class DocumentationPrepareTask extends AbstractDocumentationTask {
 
@@ -37,33 +45,62 @@ class DocumentationPrepareTask extends AbstractDocumentationTask {
 
 		initFolders()
 
+		LOGGER.info('Fetching repositories into temporary directory...')
+		for(Repository repo : repositories){
+			fetchIfNeeded(repo)
+		}
+
 		LOGGER.info('Copy templates into temporary directory...')
 		FileUtils.copyDirectory(templatesFolder, tmpTemplatesFolder)
 
 		def magicVariablesMap = globalVariables
 
-		project.fileTree(tmpTemplatesFolder) { include '**/*.tpl'}.each { docFile ->
+		project.fileTree(tmpTemplatesFolder) { include '**/*.tpl' }.each { docFile ->
 			LOGGER.info('-- Inject global variables in template file '+docFile)
 			preprocess(docFile,magicVariablesMap)
 		}
 
 
 		LOGGER.info('Copy sources for each supported template...')
-		for(DocumentExtension document : documents){
-			def supported = templates.findAll {TemplateExtension t -> document.support(t)}
-			for(TemplateExtension template : supported){
+		for(Document document : documents){
+			def supported = templates.findAll { Template t ->
+				document.support(t)
+			}
+			for(Template template : supported){
 				for(String output : template.outputs){
 					for(String lang : document.languages){
 						injectTemplate(document, template, lang, output, magicVariablesMap)
-
 					}
 				}
-
 			}
 		}
 	}
 
-	private injectTemplate(DocumentExtension document, TemplateExtension template, String lang, String output, Properties magicVariablesMap) {
+
+
+	private fetchIfNeeded(Repository repository){
+		try{
+			URL url = new URL(repository.url)
+
+			def out = FileUtils.getFile(tmpTemplatesFolder,FilenameUtils.getName(url));
+			if(!out.exists()){
+				LOGGER.info("-- ${repository.url} : downloading templates.")
+				FileUtils.copyURLToFile(url, out)
+				ZipFile zipFile = new ZipFile(out)
+				try{
+					zipFile.extractAll(tmpTemplatesFolder)
+				}catch(ZipException e){
+					LOGGER.error("Unable to unzip template repository ${repository.url}")
+				}
+			}else{
+				LOGGER.info("-- ${repository.url} : already downloaded.")
+			}
+		}catch( e){
+			LOGGER.error("Unable to fetch repository ${repository.url}", e)
+		}
+	}
+
+	private injectTemplate(Document document, Template template, String lang, String output, Properties magicVariablesMap) {
 		def dir = getTempOutputFolder(document, template, lang, output)
 
 		LOGGER.info('-- Prepare document '+document.name+' '+template.name+' ['+output+','+lang+'] in '+dir )

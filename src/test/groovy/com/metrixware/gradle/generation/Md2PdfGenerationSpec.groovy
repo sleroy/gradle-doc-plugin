@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.metrixware.gradle.markdown
+package com.metrixware.gradle.generation
 
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
@@ -22,30 +22,29 @@ import org.gradle.testfixtures.ProjectBuilder
 
 import spock.lang.Specification
 
-import com.metrixware.gradle.pandoc.DocumentExtension
+import com.metrixware.gradle.pandoc.Document
 import com.metrixware.gradle.pandoc.PandocPlugin
-import com.metrixware.gradle.pandoc.TemplateExtension
+import com.metrixware.gradle.pandoc.Template
 
-class EclipseGenerationSpec extends Specification {
+class Md2PdfGenerationSpec extends Specification {
 
 
 
-	def "Generates HTML Documentation from TeX"() {
+	def "Generates PDF Documentation from TeX"() {
 		
 		//prepare project
 		def Project project = ProjectBuilder.builder().build()
 		File fromFolder = new File('src/test/resources/fakeDoc/');
 		FileUtils.copyDirectory(fromFolder, project.rootDir)
-		def articleTemplate = new TemplateExtension("article")
-		articleTemplate.outputs=['eclipse']
-		def manualTemplate = new TemplateExtension("manual")
-		def document = new DocumentExtension("example")
-		document.templates=['article']
-		
+		def Template articleTemplate = new Template("article")
+		articleTemplate.setOutputs('html','pdf')
+		def manualTemplate = new Template("manual")
+		def Document document = new Document("example")
+		document.setType("md")
+
 		
 		when:
 		project.apply plugin: PandocPlugin
-		
 		project.documentation.templates.add(articleTemplate)
 		project.documentation.templates.add(manualTemplate)
 		project.documentation.documents.add(document)
@@ -53,7 +52,7 @@ class EclipseGenerationSpec extends Specification {
 		project.tasks.findByName('pandoc-configure').runTask()
 		project.tasks.findByName('pandoc-prepare').runTask()
 
-		Task markdownToHtmlTask = project.tasks.findByName('pandoc-eclipse')
+		Task markdownToHtmlTask = project.tasks.findByName('pandoc-md2pdf')
 		markdownToHtmlTask.runTask()
 
 		then:

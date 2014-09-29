@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.metrixware.gradle.markdown
+package com.metrixware.gradle.generation
 
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
@@ -22,11 +22,11 @@ import org.gradle.testfixtures.ProjectBuilder
 
 import spock.lang.Specification
 
-import com.metrixware.gradle.pandoc.DocumentExtension
+import com.metrixware.gradle.pandoc.Document
 import com.metrixware.gradle.pandoc.PandocPlugin
-import com.metrixware.gradle.pandoc.TemplateExtension
+import com.metrixware.gradle.pandoc.Template
 
-class Md2PdfGenerationSpec extends Specification {
+class Tex2PdfGenerationSpec extends Specification {
 
 
 
@@ -34,25 +34,23 @@ class Md2PdfGenerationSpec extends Specification {
 		
 		//prepare project
 		def Project project = ProjectBuilder.builder().build()
-		File fromFolder = new File('src/test/resources/fakeDoc/');
+		File fromFolder = new File('src/test/resources/anotherDoc/');
 		FileUtils.copyDirectory(fromFolder, project.rootDir)
-		def TemplateExtension articleTemplate = new TemplateExtension("article")
+		def Template articleTemplate = new Template("user-guide")
 		articleTemplate.setOutputs('html','pdf')
-		def manualTemplate = new TemplateExtension("manual")
-		def DocumentExtension document = new DocumentExtension("example")
-		document.setType("md")
-
+		def Document document = new Document("example")
+		document.setType("tex")
+	
 		
 		when:
 		project.apply plugin: PandocPlugin
 		project.documentation.templates.add(articleTemplate)
-		project.documentation.templates.add(manualTemplate)
 		project.documentation.documents.add(document)
 		
 		project.tasks.findByName('pandoc-configure').runTask()
 		project.tasks.findByName('pandoc-prepare').runTask()
 
-		Task markdownToHtmlTask = project.tasks.findByName('pandoc-md2pdf')
+		Task markdownToHtmlTask = project.tasks.findByName('pandoc-tex2pdf')
 		markdownToHtmlTask.runTask()
 
 		then:

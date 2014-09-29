@@ -60,71 +60,75 @@ abstract class AbstractDocumentationTask extends DefaultTask {
 		tmpSourcesFolder =FileUtils.getFile(tmpFolder,SOURCES)
 	}
 
-	Collection<TemplateExtension> getTemplates(){
+	Collection<Template> getTemplates(){
 		return project.documentation.templates
 	}
 
-	Collection<DocumentExtension> getDocuments(){
+	Collection<Document> getDocuments(){
 		return project.documentation.documents
 	}
+	
+	Collection<Repository> getRepositories(){
+		return project.documentation.repositories
+	}
 
-	File getTemplateFolder(TemplateExtension template){
+	File getTemplateFolder(Template template){
 		return FileUtils.getFile(templatesFolder, template.name)
 	}
 
-	File getDocumentFolder(DocumentExtension doc){
+	File getDocumentFolder(Document doc){
 		return FileUtils.getFile(sourcesFolder, doc.name)
 	}
 
 
-	File getDocumentFolder(DocumentExtension doc, String lang){
+	File getDocumentFolder(Document doc, String lang){
 		return FileUtils.getFile(getDocumentFolder(doc), lang)
 	}
 
 
-	File getDocumentSourceFile(DocumentExtension doc, String lang){
+	File getDocumentSourceFile(Document doc, String lang){
 		return FileUtils.getFile(getDocumentFolder(doc,lang),doc.name+'-'+lang+'.'+doc.type)
 	}
 
-	File getDocumentPropertiesFile(DocumentExtension doc, String lang){
+	File getDocumentPropertiesFile(Document doc, String lang){
 		return FileUtils.getFile(getDocumentFolder(doc,lang),doc.name+'-'+lang+'.properties')
 	}
 
-	File getTemplateFolder(TemplateExtension template, String output){
+	File getTemplateFolder(Template template, String output){
 		return FileUtils.getFile(getTemplateFolder(template), output)
 	}
 
-	File getTemplateFile(TemplateExtension template, String output){
+	File getTemplateFile(Template template, String output){
 		return FileUtils.getFile(getTemplateFolder(template,output), 'template.tpl')
 	}
 
-	File getTempTemplateFile(DocumentExtension doc,TemplateExtension template,String lang, String output){
+	File getTempTemplateFile(Document doc,Template template,String lang, String output){
 		return FileUtils.getFile(getTempOutputFolder(doc,template,lang,output),'template.tpl')
 	}
 
-	File getTempTemplateFolder(TemplateExtension template, String output){
+	File getTempTemplateFolder(Template template, String output){
 		return FileUtils.getFile(tmpTemplatesFolder, template.name,output)
 	}
 
-	boolean hasTemplate(TemplateExtension template, String output){
+	boolean hasTemplate(Template template, String output){
 		File templateFile = getTemplateFile(template, output)
 		return templateFile.exists() && !templateFile.text.isEmpty()
 	}
 
-	File getTempOutputFolder(DocumentExtension doc,TemplateExtension template,String lang, String output){
+	File getTempOutputFolder(Document doc,Template template,String lang, String output){
 		return FileUtils.getFile(getTempOutputFolder(doc),template.name,lang,output)
 	}
 
-	File getTempOutputFolder(DocumentExtension doc){
+	File getTempOutputFolder(Document doc){
 		return FileUtils.getFile(tmpSourcesFolder, doc.name)
 	}
 
-	File getTempSourceDocument(DocumentExtension doc, TemplateExtension template, String lang, String output){
+	File getTempSourceDocument(Document doc, Template template, String lang, String output){
 		def dir = getTempOutputFolder(doc, template, lang, output)
 		return FileUtils.getFile(dir, "${doc.name}-${lang}.${doc.type}")
 	}
 
-	File getTempOutputDocument(DocumentExtension doc, TemplateExtension template, String lang, String output){
+	File getTempOutputDocument(Document doc, Template template, String lang, String output){
 		def dir = getTempOutputFolder(doc, template, lang, output)
 		return FileUtils.getFile(dir, "${doc.name}-${lang}.${output}")
 	}
@@ -159,7 +163,7 @@ abstract class AbstractDocumentationTask extends DefaultTask {
 		return magicVariablesMap
 	}
 
-	Properties getDocumentVariables(DocumentExtension document, String lang) {
+	Properties getDocumentVariables(Document document, String lang) {
 		def properties = new Properties()
 		properties.load(FileUtils.openInputStream(getDocumentPropertiesFile(document, lang)))
 		return properties

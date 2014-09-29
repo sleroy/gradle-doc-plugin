@@ -7,14 +7,14 @@ import org.apache.commons.lang3.StringUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import com.metrixware.gradle.pandoc.DocumentExtension
-import com.metrixware.gradle.pandoc.TemplateExtension
+import com.metrixware.gradle.pandoc.Document
+import com.metrixware.gradle.pandoc.Template
 import com.metrixware.gradle.pandoc.postprocess.Latex2HtmlReferencesPostprocessor
 
 class HtmlGenerationTask extends AbstractPandocGenerationTask{
 
 	@Override
-	protected boolean isSupported(DocumentExtension doc, String output) {
+	protected boolean isSupported(Document doc, String output) {
 		return 'html'.equals(output) && ('tex'.equals(doc.type)||'md'.equals(doc.type))
 	}
 
@@ -29,8 +29,8 @@ class HtmlGenerationTask extends AbstractPandocGenerationTask{
 	}
 
 	@Override
-	protected void copyToSite(File folder, DocumentExtension doc,
-			TemplateExtension template, String lang, String output) {
+	protected void copyToSite(File folder, Document doc,
+			Template template, String lang, String output) {
 		def out =  getDocumentOutputFile(doc, template, lang, output)
 		project.copy {
 			from(folder) {

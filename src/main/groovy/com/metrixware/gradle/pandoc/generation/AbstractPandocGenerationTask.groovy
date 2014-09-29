@@ -5,15 +5,15 @@ import org.apache.commons.lang3.StringUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-import com.metrixware.gradle.pandoc.DocumentExtension
-import com.metrixware.gradle.pandoc.TemplateExtension
+import com.metrixware.gradle.pandoc.Document
+import com.metrixware.gradle.pandoc.Template
 
 abstract class AbstractPandocGenerationTask extends AbstractGenerationTask{
 	protected static final Logger LOGGER = LoggerFactory.getLogger('pandoc-generation')
 	
 	@Override
-	protected void process(File folder, DocumentExtension doc,
-			TemplateExtension template, String lang, String output) {
+	protected void process(File folder, Document doc,
+			Template template, String lang, String output) {
 		def tmpOutDir = getTempOutputFolder(doc,template,lang,output)
 		def input = getTempSourceDocument(doc, template, lang, output)
 		def tmpOut = getTempOutputDocument(doc, template, lang, output)
@@ -49,7 +49,7 @@ abstract class AbstractPandocGenerationTask extends AbstractGenerationTask{
 		return output
 	}
 
-	protected void copyToSite(File folder, DocumentExtension doc, TemplateExtension template,String lang, String output) {
+	protected void copyToSite(File folder, Document doc, Template template,String lang, String output) {
 		def tmpOut = getTempOutputDocument(doc, template, lang, output)
 		def out =  getDocumentOutputFile(doc, template, lang, output)
 		LOGGER.info("Copy ${folder} into ${out}")

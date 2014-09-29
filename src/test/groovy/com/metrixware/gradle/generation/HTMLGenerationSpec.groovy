@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.metrixware.gradle.markdown
+package com.metrixware.gradle.generation
 
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
@@ -22,9 +22,9 @@ import org.gradle.testfixtures.ProjectBuilder
 
 import spock.lang.Specification
 
-import com.metrixware.gradle.pandoc.DocumentExtension
+import com.metrixware.gradle.pandoc.Document
 import com.metrixware.gradle.pandoc.PandocPlugin
-import com.metrixware.gradle.pandoc.TemplateExtension
+import com.metrixware.gradle.pandoc.Template
 
 class HTMLGenerationSpec extends Specification {
 
@@ -37,9 +37,9 @@ class HTMLGenerationSpec extends Specification {
 		
 		File fromFolder = new File('src/test/resources/fakeDoc/');
 		FileUtils.copyDirectory(fromFolder, project.rootDir)
-		def articleTemplate = new TemplateExtension("article")
-		def manualTemplate = new TemplateExtension("manual")
-		def document = new DocumentExtension("example")
+		def articleTemplate = new Template("article")
+		def manualTemplate = new Template("manual")
+		def document = new Document("example")
 		
 		
 		when:

@@ -16,7 +16,7 @@
 package com.metrixware.gradle.pandoc
 
 
-class DocumentationExtension {
+class Documentation {
 
 	Map<String, Object> templateVariables = new HashMap<String, Object>()
 	// Binaries
