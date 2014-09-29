@@ -20,8 +20,8 @@ class Documentation {
 
 	Map<String, Object> templateVariables = new HashMap<String, Object>()
 	// Binaries
-	String panDocBin = '/usr/local/bin/pandoc'
-	String pdfTexBin ='/usr/texbin/xelatex'
+	String panDocBin = 'pandoc'
+	String pdfTexBin ='xelatex'
 
 	String[] sources=[
 		'tex',

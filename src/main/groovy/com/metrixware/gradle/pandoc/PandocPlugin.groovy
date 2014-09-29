@@ -24,6 +24,7 @@ import com.metrixware.gradle.pandoc.generation.EpubGenerationTask
 import com.metrixware.gradle.pandoc.generation.HtmlGenerationTask
 import com.metrixware.gradle.pandoc.generation.Md2PdfGenerationTask
 import com.metrixware.gradle.pandoc.generation.Tex2PdfGenerationTask
+import com.metrixware.gradle.pandoc.project.BuildPackagedDocTask;
 import com.metrixware.gradle.pandoc.project.BuildRepositoryTask;
 import com.metrixware.gradle.pandoc.project.CleanTask
 import com.metrixware.gradle.pandoc.project.DocumentationConfigurationTask
@@ -67,7 +68,7 @@ class PandocPlugin implements Plugin<Project> {
 		group: DOCUMENTATION,
 		description: 'Build a templates repository. All templates of the documentation project are zipped into a single zip file.')
 
-
+		
 		project.task('pandoc-check',
 		type: ToolCheckingTask,
 		group: DOCUMENTATION,
@@ -137,6 +138,13 @@ class PandocPlugin implements Plugin<Project> {
 			'pandoc-eclipse'
 		],
 		description: 'Produce all documentations.')
+		
+		
+		project.task('pandoc-build',
+		type: BuildPackagedDocTask,
+		group: DOCUMENTATION,
+		dependsOn: ['pandoc-all'],
+		description: 'Produce and package all documents into a single zip file.')
 	}
 }
 
