@@ -46,7 +46,7 @@ class DocumentationPrepareTask extends AbstractDocumentationTask {
 
 		initFolders()
 
-		def repos = getTempRepositoriesDirectory();
+		def repos = tempRepositoriesDirectory()
 
 		LOGGER.debug("Fetching repositories into ${repos}")
 		for(Repository repo : repositories){
@@ -95,7 +95,7 @@ class DocumentationPrepareTask extends AbstractDocumentationTask {
 		}
 	}
 
-	private File getTempRepositoriesDirectory(){
+	private File tempRepositoriesDirectory(){
 		return FileUtils.getFile(tmpFolder,'repositories')
 	}
 
@@ -178,7 +178,7 @@ class DocumentationPrepareTask extends AbstractDocumentationTask {
 
 	private initFolders() {
 		LOGGER.debug("Creating temporary templates directory in ${tmpTemplatesFolder}")
-		tmpTemplatesFolder.deleteDir();
+		tmpTemplatesFolder.deleteDir()
 		tmpTemplatesFolder.mkdirs()
 		LOGGER.debug("Creating output directory in ${outputDir}")
 		FileUtils.deleteDirectory(outputDir)

@@ -107,5 +107,15 @@ test {
 
 }
 
-
 artifacts { sourceJar }
+
+repositories {
+	maven {
+		credentials {
+			username mavenUser
+ 			password mavenPassword
+		}
+		url "http://zeus:8081/nexus/content/repositories/releases"
+	}
+}
+
