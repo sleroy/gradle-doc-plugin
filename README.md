@@ -30,17 +30,20 @@ Quickstart
 
 Insert the following snippet in your build.gradle of your gradle project.
 
-	buildscript { 
-    	repositories {
-			mavenLocal()
-        	jcenter()
-        	maven { url 'http://dl.bintray.com/sleroy/maven' }
-    	}
-    	dependencies {
-        	classpath 'com.metrixware:gradle-doc-plugin:0.1.2+'
-    	}
-	}
-	apply plugin: 'pandoc'
+  buildscript { 
+      repositories {
+    mavenLocal()
+          jcenter()
+          maven { url 'http://dl.bintray.com/sleroy/maven' }
+      }
+      dependencies {
+          classpath 'com.metrixware:gradle-doc-plugin:0.1.3'
+      }
+  }
+  apply plugin: 'pandoc'
+  apply plugin : 'java'
+
+
 
 ## Configuration
 
@@ -366,6 +369,10 @@ Variables can be used in the source document and template using the notation :`@
 
 Changelog
 ===
+
+#### 0.1.3
+
+* Latest synchronization on Bintray
 
 #### 0.1.2 
  * Add support of LaTeX sources 
