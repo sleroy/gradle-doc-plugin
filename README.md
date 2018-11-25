@@ -37,7 +37,7 @@ Insert the following snippet in your build.gradle of your gradle project.
           maven { url 'http://dl.bintray.com/sleroy/maven' }
       }
       dependencies {
-          classpath 'com.metrixware:gradle-doc-plugin:0.1.3'
+          classpath 'com.metrixware:gradle-doc-plugin:0.1.4'
       }
   }
   apply plugin: 'pandoc'
@@ -369,6 +369,10 @@ Variables can be used in the source document and template using the notation :`@
 
 Changelog
 ===
+
+#### 0.1.4
+
+Fixed command to check pandoc version. issue #5
 
 #### 0.1.3
 
