@@ -53,7 +53,7 @@ class ToolCheckingTask extends AbstractDocumentationTask {
 	}
 
 	def checkLatexPresence() {
-		ProcessBuilder builder = new ProcessBuilder("${project.documentation.pdfTexBin} -v".split())
+		ProcessBuilder builder = new ProcessBuilder("${project.documentation.pdfTexBin} --version".split())
 		builder.redirectErrorStream(true)
 		builder.directory(project.rootDir)
 		Process process = builder.start()
